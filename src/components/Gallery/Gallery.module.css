@@ -1,0 +1,433 @@
+/* ============================================================
+   Public Gallery & Lightbox Styles
+   ============================================================ */
+
+/* -------------------------------------------------------
+   Gallery Container & Header
+   ------------------------------------------------------- */
+.gallerySection {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  margin-top: var(--space-4);
+}
+
+.galleryHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.galleryTitleGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.gallerySectionTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-primary);
+}
+
+.galleryCountBadge {
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  font-weight: var(--weight-semibold);
+}
+
+/* -------------------------------------------------------
+   Masonry Grid Layout (CSS Columns)
+   ------------------------------------------------------- */
+.masonryGrid {
+  column-count: 1;
+  column-gap: var(--space-4);
+  width: 100%;
+}
+
+@media (min-width: 540px) {
+  .masonryGrid {
+    column-count: 2;
+  }
+}
+
+@media (min-width: 860px) {
+  .masonryGrid {
+    column-count: 3;
+    column-gap: var(--space-5);
+  }
+}
+
+@media (min-width: 1200px) {
+  .masonryGrid {
+    column-count: 4;
+  }
+}
+
+/* -------------------------------------------------------
+   Gallery Card
+   ------------------------------------------------------- */
+.card {
+  position: relative;
+  width: 100%;
+  break-inside: avoid;
+  margin-bottom: var(--space-4);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transform: translateZ(0);
+  transition: transform var(--duration-normal) var(--ease-out),
+              box-shadow var(--duration-normal) var(--ease-out),
+              border-color var(--duration-normal) var(--ease-out);
+}
+
+@media (min-width: 860px) {
+  .card {
+    margin-bottom: var(--space-5);
+  }
+}
+
+.card:hover,
+.card:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-accent-primary);
+  outline: none;
+}
+
+.cardBlurhash {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.cardImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity var(--duration-slow) var(--ease-out),
+              transform var(--duration-slower) var(--ease-out);
+}
+
+.cardImageVisible {
+  opacity: 1;
+}
+
+.card:hover .cardImage {
+  transform: scale(1.03);
+}
+
+/* Hover overlay */
+.cardOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(17, 14, 12, 0.85) 0%,
+    rgba(17, 14, 12, 0.2) 50%,
+    transparent 100%
+  );
+  z-index: 3;
+  opacity: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: var(--space-4);
+  transition: opacity var(--duration-normal) var(--ease-out);
+}
+
+.card:hover .cardOverlay,
+.card:focus-visible .cardOverlay {
+  opacity: 1;
+}
+
+.cardOverlayContent {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cardDate {
+  font-size: var(--text-xs);
+  color: var(--color-text-primary);
+  font-weight: var(--weight-medium);
+}
+
+.cardActionHint {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--color-accent-primary);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+/* -------------------------------------------------------
+   Pagination & Load More Controls
+   ------------------------------------------------------- */
+.loadMoreContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-6) 0;
+}
+
+.loadMoreBtn {
+  min-width: 180px;
+}
+
+.loadingSpinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.endOfGalleryText {
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+  text-align: center;
+  font-style: italic;
+}
+
+/* -------------------------------------------------------
+   Empty State
+   ------------------------------------------------------- */
+.emptyState {
+  text-align: center;
+  padding: var(--space-12) var(--space-4);
+  background-color: var(--color-bg-elevated);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.emptyIcon {
+  font-size: var(--text-4xl);
+  color: var(--color-accent-primary);
+  margin-bottom: var(--space-2);
+}
+
+.emptyTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  color: var(--color-text-primary);
+}
+
+.emptyDesc {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  max-width: 420px;
+}
+
+/* -------------------------------------------------------
+   Lightbox Modal
+   ------------------------------------------------------- */
+.lightboxBackdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(10, 8, 7, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  animation: fadeIn var(--duration-fast) var(--ease-out) both;
+}
+
+.lightboxContent {
+  position: relative;
+  max-width: 95vw;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-xl);
+  animation: scaleUp var(--duration-normal) var(--ease-out) both;
+}
+
+.lightboxTopBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3) var(--space-5);
+  background-color: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.lightboxMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.lightboxIndex {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  color: var(--color-accent-primary);
+  background-color: var(--color-accent-primary-light);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.lightboxDate {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+}
+
+.lightboxActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.lightboxBtn {
+  font-size: var(--text-xs);
+  padding: var(--space-2) var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.lightboxCloseBtn {
+  font-size: var(--text-base);
+  padding: var(--space-2) var(--space-3);
+}
+
+.lightboxImageWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+  max-height: calc(85vh - 90px);
+  background-color: #0d0a09;
+  overflow: hidden;
+}
+
+.lightboxBlurhash {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.lightboxImage {
+  max-width: 90vw;
+  max-height: calc(85vh - 90px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-out);
+  z-index: 2;
+}
+
+.lightboxImageVisible {
+  opacity: 1;
+}
+
+.lightboxNavBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  background-color: rgba(17, 14, 12, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--color-text-primary);
+  font-size: var(--text-2xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out),
+              transform var(--duration-fast) var(--ease-out);
+}
+
+.lightboxNavBtn:hover {
+  background-color: var(--color-accent-primary);
+  color: #fff;
+  transform: translateY(-50%) scale(1.08);
+}
+
+.lightboxNavPrev {
+  left: var(--space-3);
+}
+
+.lightboxNavNext {
+  right: var(--space-3);
+}
+
+.lightboxFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2) var(--space-5);
+  background-color: var(--color-bg-primary);
+  border-top: 1px solid var(--color-border);
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+}
+
+.lightboxDimensions {
+  font-family: monospace;
+}
+
+.lightboxFineArtsBadge {
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
