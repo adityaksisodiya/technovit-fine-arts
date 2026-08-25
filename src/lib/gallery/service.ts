@@ -80,29 +80,44 @@ export async function getPublicGalleryPhotos(
     query = query.lt("created_at", cursor);
   }
 
-  const { data, count, error } = await query;
+  try {
+    const { data, count, error } = await query;
 
-  if (error) {
-    console.error("Failed to query public gallery photos:", error);
-    throw new Error(`Failed to load gallery photos: ${error.message}`);
+    if (error) {
+      console.error("Failed to query public gallery photos:", error);
+      return {
+        photos: [],
+        nextCursor: null,
+        hasMore: false,
+        totalApprovedCount: 0,
+      };
+    }
+
+    const rawRows = (data as unknown as Photo[]) || [];
+    const hasMore = rawRows.length > clampedLimit;
+    const pageRows = hasMore ? rawRows.slice(0, clampedLimit) : rawRows;
+
+    const photos: PublicPhoto[] = pageRows.map(toPublicPhoto);
+    const nextCursor =
+      hasMore && pageRows.length > 0
+        ? pageRows[pageRows.length - 1].created_at
+        : null;
+
+    return {
+      photos,
+      nextCursor,
+      hasMore,
+      totalApprovedCount: count ?? photos.length,
+    };
+  } catch (err) {
+    console.error("Network or database error fetching public gallery photos:", err);
+    return {
+      photos: [],
+      nextCursor: null,
+      hasMore: false,
+      totalApprovedCount: 0,
+    };
   }
-
-  const rawRows = (data as unknown as Photo[]) || [];
-  const hasMore = rawRows.length > clampedLimit;
-  const pageRows = hasMore ? rawRows.slice(0, clampedLimit) : rawRows;
-
-  const photos: PublicPhoto[] = pageRows.map(toPublicPhoto);
-  const nextCursor =
-    hasMore && pageRows.length > 0
-      ? pageRows[pageRows.length - 1].created_at
-      : null;
-
-  return {
-    photos,
-    nextCursor,
-    hasMore,
-    totalApprovedCount: count ?? photos.length,
-  };
 }
 
 /**
