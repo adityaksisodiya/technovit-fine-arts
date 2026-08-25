@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { createClient, createAdminClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 
 export interface LoginActionResult {
   error?: string;
@@ -27,7 +27,7 @@ function getSafeRedirect(redirectParam?: string | null): string {
  *
  * Flow:
  * 1. Authenticates via Supabase Auth (email/password) using cookie-aware client
- * 2. Verifies `admin_users` record for the authenticated user ID
+ * 2. Verifies `admin_users` record for the authenticated user ID through RLS
  * 3. Rejects if not an active admin (clearing session)
  * 4. Redirects to target /admin route
  */
@@ -56,9 +56,8 @@ export async function loginAction(
     return { error: "Invalid credentials or unauthorized account." };
   }
 
-  // Step 2: Verification against admin_users table
-  const adminClient = createAdminClient();
-  const { data: adminRecord, error: dbError } = await adminClient
+  // Step 2: Verification against admin_users table via authenticated client
+  const { data: adminRecord, error: dbError } = await supabase
     .from("admin_users")
     .select("role, is_active")
     .eq("id", authData.user.id)
