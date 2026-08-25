@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
 
 export interface LoginActionResult {
   error?: string;
@@ -26,9 +26,9 @@ function getSafeRedirect(redirectParam?: string | null): string {
  * Server Action for Administrator Login.
  *
  * Flow:
- * 1. Authenticates via Supabase Auth (email/password)
- * 2. Checks `admin_users` table for an active admin record
- * 3. Rejects if not an admin or deactivated (clearing session)
+ * 1. Authenticates via Supabase Auth (email/password) using cookie-aware client
+ * 2. Verifies `admin_users` record for the authenticated user ID
+ * 3. Rejects if not an active admin (clearing session)
  * 4. Redirects to target /admin route
  */
 export async function loginAction(
@@ -45,7 +45,7 @@ export async function loginAction(
 
   const supabase = await createClient();
 
-  // Step 1: Supabase Auth authentication
+  // Step 1: Supabase Auth authentication (attaches auth cookies to response)
   const { data: authData, error: authError } =
     await supabase.auth.signInWithPassword({
       email,
@@ -57,7 +57,8 @@ export async function loginAction(
   }
 
   // Step 2: Verification against admin_users table
-  const { data: adminRecord, error: dbError } = await supabase
+  const adminClient = createAdminClient();
+  const { data: adminRecord, error: dbError } = await adminClient
     .from("admin_users")
     .select("role, is_active")
     .eq("id", authData.user.id)
