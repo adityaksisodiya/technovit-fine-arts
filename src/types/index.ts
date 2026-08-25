@@ -2,7 +2,6 @@
    TechnoVIT Fine Arts Club — Shared TypeScript Types
    
    Core type definitions used across the application.
-   This file grows as features are added in later phases.
    ============================================================ */
 
 /**
@@ -65,3 +64,23 @@ export enum AuditEntityType {
   ADMIN = 'admin',
   SETTING = 'setting',
 }
+
+/**
+ * Administrator profile model from `admin_users` table.
+ */
+export interface AdminUser {
+  id: string; // Auth User UUID
+  email: string;
+  display_name: string | null;
+  role: AdminRole;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * Auth state result for server-side verification.
+ */
+export type AdminAuthResult =
+  | { success: true; admin: AdminUser }
+  | { success: false; error: 'UNAUTHENTICATED' | 'NOT_AN_ADMIN' | 'DEACTIVATED' | 'DB_ERROR' };

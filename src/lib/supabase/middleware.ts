@@ -2,11 +2,29 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 /**
- * Middleware session handler for Supabase.
- * Refreshes auth tokens and updates response cookies.
+ * Validates whether a redirect path is safe and points strictly to an internal `/admin` route.
+ */
+function getSafeAdminRedirect(redirectParam?: string | null): string {
+  if (
+    redirectParam &&
+    redirectParam.startsWith("/admin") &&
+    !redirectParam.startsWith("//") &&
+    !redirectParam.includes("://")
+  ) {
+    return redirectParam;
+  }
+  return "/admin/dashboard";
+}
+
+/**
+ * Middleware session handler and route guard for Supabase.
  *
- * NOTE: Phase 2B prepares the structure. Route protection logic (e.g. /admin/*)
- * will be connected when authentication is implemented in subsequent phases.
+ * Enforces server-side route protection on all `/admin/*` routes:
+ * 1. Anonymous visitors: allowed on public routes (`/`, etc.)
+ * 2. Unauthenticated requests to `/admin/*`: redirected to `/admin/login`
+ * 3. Authenticated requests to `/admin/*`: verified against `admin_users` table (must be `is_active = true`)
+ * 4. Authenticated admins visiting `/admin/login`: redirected to `/admin/dashboard`
+ * 5. Refreshes auth tokens and synchronizes response cookies
  */
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -17,7 +35,6 @@ export async function updateSession(request: NextRequest) {
   const supabasePublishableKey =
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
-  // Pass through if Supabase credentials are not configured in environment yet
   if (!supabaseUrl || !supabasePublishableKey) {
     return supabaseResponse;
   }
@@ -41,8 +58,64 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
-  // Refresh auth token by calling getUser (ready for future auth enforcement)
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { pathname } = request.nextUrl;
+
+  // Handle /admin route protection
+  if (pathname.startsWith("/admin")) {
+    const isLoginPage = pathname === "/admin/login";
+    const isUnauthorizedPage = pathname === "/admin/unauthorized";
+
+    // Unauthenticated user attempting to access protected admin route
+    if (!user && !isLoginPage && !isUnauthorizedPage) {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = "/admin/login";
+      if (pathname !== "/admin" && pathname !== "/admin/dashboard") {
+        redirectUrl.searchParams.set("redirect", pathname);
+      }
+      return NextResponse.redirect(redirectUrl);
+    }
+
+    // Exact /admin path -> redirect to dashboard or login
+    if (pathname === "/admin") {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = user ? "/admin/dashboard" : "/admin/login";
+      return NextResponse.redirect(redirectUrl);
+    }
+
+    // Authenticated user checks
+    if (user) {
+      // Query admin_users table to verify active administrator profile
+      const { data: adminRecord } = await supabase
+        .from("admin_users")
+        .select("role, is_active")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      const isActiveAdmin = Boolean(adminRecord && adminRecord.is_active);
+
+      // If user is an active admin on the login page, send them to dashboard
+      if (isLoginPage && isActiveAdmin) {
+        const redirectParam = request.nextUrl.searchParams.get("redirect");
+        const destination = getSafeAdminRedirect(redirectParam);
+        const redirectUrl = request.nextUrl.clone();
+        redirectUrl.search = "";
+        redirectUrl.pathname = destination;
+        return NextResponse.redirect(redirectUrl);
+      }
+
+      // If user is authenticated in Supabase Auth but NOT an active admin in admin_users
+      if (!isLoginPage && !isUnauthorizedPage && !isActiveAdmin) {
+        const redirectUrl = request.nextUrl.clone();
+        redirectUrl.pathname = "/admin/login";
+        redirectUrl.searchParams.set("error", "unauthorized");
+        return NextResponse.redirect(redirectUrl);
+      }
+    }
+  }
 
   return supabaseResponse;
 }
