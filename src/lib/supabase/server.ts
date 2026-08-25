@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
 /**
@@ -51,13 +52,7 @@ export function createAdminClient() {
     );
   }
 
-  return createServerClient(supabaseUrl, supabaseSecretKey, {
-    cookies: {
-      getAll() {
-        return [];
-      },
-      setAll() {},
-    },
+  return createSupabaseClient(supabaseUrl, supabaseSecretKey, {
     auth: {
       persistSession: false,
       autoRefreshToken: false,

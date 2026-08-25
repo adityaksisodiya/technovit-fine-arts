@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { requireAdmin } from "@/lib/auth/admin";
+import { getModerationStats } from "@/lib/moderation";
 import { AdminRole } from "@/types";
 import { logoutAction } from "../actions";
 import styles from "./dashboard.module.css";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
-  title: "Admin Dashboard",
+  title: "Admin Dashboard — TechnoVIT",
   description: "TechnoVIT Photo Gallery Administration & Moderation Panel",
   robots: {
     index: false,
@@ -38,6 +41,7 @@ function formatRoleLabel(role: AdminRole): string {
 
 export default async function AdminDashboardPage() {
   const admin = await requireAdmin(AdminRole.MODERATOR, "/admin/dashboard");
+  const stats = await getModerationStats();
 
   return (
     <div className={styles.container}>
@@ -51,8 +55,8 @@ export default async function AdminDashboardPage() {
         </div>
 
         <div className={styles.navActions}>
-          <Link href="/" className="btn btn--secondary">
-            View Public Gallery
+          <Link href="/" className="btn btn--secondary" target="_blank">
+            View Public Gallery ↗
           </Link>
           <form action={logoutAction}>
             <button type="submit" className="btn btn--ghost" id="admin-logout-btn">
@@ -81,23 +85,38 @@ export default async function AdminDashboardPage() {
         </div>
       </section>
 
-      {/* Planned Modules Overview */}
+      {/* Active & Planned Modules */}
       <section className={styles.grid} aria-label="Management modules">
-        <div className={styles.moduleCard}>
+        {/* Active Moderation Queue Module */}
+        <Link
+          href="/admin/moderation"
+          className={`${styles.moduleCard} card card--interactive`}
+          id="moderation-queue-module-link"
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
           <div className={styles.moduleHeader}>
             <span className={styles.moduleIcon} aria-hidden="true">🖼️</span>
-            <span className={styles.moduleStatus}>Phase 2E</span>
+            <span
+              className={styles.moduleStatus}
+              style={{
+                color: stats.pendingCount > 0 ? "var(--color-accent-primary)" : "var(--color-success)",
+                fontWeight: "var(--weight-bold)",
+              }}
+            >
+              {stats.pendingCount > 0 ? `● ${stats.pendingCount} Pending Review` : "✓ All Caught Up"}
+            </span>
           </div>
           <h2 className={styles.moduleTitle}>Moderation Queue</h2>
           <p className={styles.moduleDesc}>
-            Review submitted photos, approve for public display, reject inappropriate submissions, and add moderation notes.
+            Review newly submitted photos, approve for public display, reject inappropriate submissions, and inspect high-res photos.
           </p>
-        </div>
+        </Link>
 
+        {/* Photo Management Module */}
         <div className={styles.moduleCard}>
           <div className={styles.moduleHeader}>
             <span className={styles.moduleIcon} aria-hidden="true">📸</span>
-            <span className={styles.moduleStatus}>Phase 2E</span>
+            <span className={styles.moduleStatus}>Phase 4</span>
           </div>
           <h2 className={styles.moduleTitle}>Photo Management</h2>
           <p className={styles.moduleDesc}>
@@ -105,10 +124,11 @@ export default async function AdminDashboardPage() {
           </p>
         </div>
 
+        {/* Locations & Booths Module */}
         <div className={styles.moduleCard}>
           <div className={styles.moduleHeader}>
             <span className={styles.moduleIcon} aria-hidden="true">📍</span>
-            <span className={styles.moduleStatus}>Phase 2D</span>
+            <span className={styles.moduleStatus}>Phase 5</span>
           </div>
           <h2 className={styles.moduleTitle}>Locations & Booths</h2>
           <p className={styles.moduleDesc}>
@@ -116,14 +136,15 @@ export default async function AdminDashboardPage() {
           </p>
         </div>
 
+        {/* Storage Metrics Module */}
         <div className={styles.moduleCard}>
           <div className={styles.moduleHeader}>
             <span className={styles.moduleIcon} aria-hidden="true">📊</span>
-            <span className={styles.moduleStatus}>Phase 2F / Phase 6</span>
+            <span className={styles.moduleStatus}>Phase 6</span>
           </div>
           <h2 className={styles.moduleTitle}>System & Storage Metrics</h2>
           <p className={styles.moduleDesc}>
-            Monitor Cloudflare R2 storage utilization quotas, audit logs, and system error events.
+            Monitor Backblaze B2 storage capacity against the 7.5 GB hard-stop, audit logs, and system error events.
           </p>
         </div>
       </section>
