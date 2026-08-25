@@ -5,8 +5,6 @@ import {
   validatePayloadSize,
   validateImageBuffer,
   processUploadedPhoto,
-  getDisplayKey,
-  getThumbnailKey,
   uploadStorageObject,
   deleteStoragePrefix,
   admitAndCreatePendingPhoto,
@@ -28,9 +26,9 @@ export const dynamic = "force-dynamic";
  * 2. Strictly validates image content (magic bytes, Sharp decode, bounds, 40 MP budget)
  * 3. Processes into optimized WebP variants (display 1600px + thumbnail 400px + blurhash)
  * 4. Atomically enforces IP rate limiting (max 10 / 15 min), 7.5 GB storage hard-stop reservation,
- *    and inserts photo row (status: 'pending') via PostgreSQL stored procedure
+ *    pre-generates deterministic storage keys, and inserts photo row (status: 'pending')
  * 5. Uploads display.webp and thumb.webp server-to-server to private Backblaze B2 bucket
- * 6. Updates photo record with confirmed storage keys (never storing original)
+ * 6. Marks uploaded_at on completion (never storing original)
  * 7. Rollback: Deletes any B2 objects and incomplete database row on failure
  */
 export async function POST(
@@ -96,8 +94,7 @@ export async function POST(
     // 5. Sharp Processing (Display WebP + Thumbnail WebP + Blurhash)
     const processed = await processUploadedPhoto(rawBuffer);
 
-    // 6. Atomic Admission & DB Row Creation
-    // (Atomically enforces rate limit, 7.5 GB storage hard-stop reservation, and inserts pending row)
+    // 6. Atomic Admission & DB Row Creation with Pre-Generated Keys
     const admission = await admitAndCreatePendingPhoto({
       ipAddress: ip,
       fileSizeBytes: processed.totalProcessedSizeBytes,
@@ -112,34 +109,30 @@ export async function POST(
     createdPhotoId = photoId;
 
     // 7. Upload final WebP objects to Backblaze B2 (Server-to-Server)
-    const displayKey = getDisplayKey(photoId);
-    const thumbKey = getThumbnailKey(photoId);
-
     await uploadStorageObject(
-      displayKey,
+      admission.displayKey,
       processed.displayBuffer,
       "image/webp"
     );
 
     await uploadStorageObject(
-      thumbKey,
+      admission.thumbKey,
       processed.thumbBuffer,
       "image/webp"
     );
 
-    // 8. Update photo row with finalized storage keys
+    // 8. Mark upload confirmed in database
     const supabase = createAdminClient();
     const { error: dbUpdateError } = await supabase
       .from("photos")
       .update({
-        r2_display_key: displayKey,
-        r2_thumbnail_key: thumbKey,
+        uploaded_at: new Date().toISOString(),
       })
       .eq("id", photoId);
 
     if (dbUpdateError) {
       throw new Error(
-        `Failed to finalize photo storage keys: ${dbUpdateError.message}`
+        `Failed to confirm photo upload completion: ${dbUpdateError.message}`
       );
     }
 

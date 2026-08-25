@@ -1,9 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/server";
 import { PhotoStatus } from "@/types";
-import {
-  STORAGE_HARD_STOP_BYTES,
-  MAX_UPLOADS_PER_WINDOW,
-} from "./constants";
 
 export class UploadAdmissionError extends Error {
   code: string;
@@ -37,18 +33,24 @@ export interface AdmitPhotoParams {
 export interface AdmitPhotoResult {
   photoId: string;
   status: PhotoStatus;
+  displayKey: string;
+  thumbKey: string;
 }
 
 /**
  * Atomically enforces rate limiting, reserves storage against the 7.5 GB hard-stop,
- * and creates the pending photo row in Supabase within a single transaction.
+ * pre-generates deterministic storage keys, and creates the pending photo row in Supabase
+ * strictly via the `admit_and_create_pending_photo` stored procedure.
+ *
+ * Direct table INSERT fallback is intentionally prohibited to guarantee that all
+ * admissions strictly pass through PostgreSQL advisory locks and storage budget checks.
  */
 export async function admitAndCreatePendingPhoto(
   params: AdmitPhotoParams
 ): Promise<AdmitPhotoResult> {
   const supabase = createAdminClient();
 
-  // Call the atomic PostgreSQL stored procedure
+  // Call the atomic PostgreSQL stored procedure (single authoritative entry point)
   const { data, error } = await supabase.rpc("admit_and_create_pending_photo", {
     p_uploaded_from_ip: params.ipAddress,
     p_file_size_bytes: params.fileSizeBytes,
@@ -57,8 +59,6 @@ export async function admitAndCreatePendingPhoto(
     p_blurhash: params.blurhash || null,
     p_content_type: params.contentType,
     p_booth_id: params.boothId || null,
-    p_max_storage_bytes: STORAGE_HARD_STOP_BYTES,
-    p_max_window_uploads: MAX_UPLOADS_PER_WINDOW,
   });
 
   if (error) {
@@ -81,35 +81,18 @@ export async function admitAndCreatePendingPhoto(
       );
     }
 
-    // Direct fallback insert (used before migration 00003 is applied)
-    const { data: directData, error: directError } = await supabase
-      .from("photos")
-      .insert({
-        status: PhotoStatus.PENDING,
-        r2_original_key: null,
-        r2_display_key: null,
-        r2_thumbnail_key: null,
-        blurhash: params.blurhash || null,
-        width: params.width,
-        height: params.height,
-        file_size_bytes: params.fileSizeBytes,
-        content_type: params.contentType,
-        uploaded_from_ip: params.ipAddress,
-        booth_id: params.boothId || null,
-      })
-      .select("id, status")
-      .single();
-
-    if (directError || !directData) {
-      throw new Error(
-        `Failed to create photo record: ${directError?.message || error.message}`
+    if (
+      errorMsg.includes("INVALID_FILE_SIZE") ||
+      errorMsg.includes("INVALID_DIMENSIONS")
+    ) {
+      throw new UploadAdmissionError(
+        errorMsg,
+        "INVALID_INPUT",
+        400
       );
     }
 
-    return {
-      photoId: directData.id as string,
-      status: directData.status as PhotoStatus,
-    };
+    throw new Error(`Upload admission failed: ${errorMsg}`);
   }
 
   const row = Array.isArray(data) ? data[0] : data;
@@ -120,5 +103,7 @@ export async function admitAndCreatePendingPhoto(
   return {
     photoId: row.id as string,
     status: row.status as PhotoStatus,
+    displayKey: row.storage_display_key as string,
+    thumbKey: row.storage_thumb_key as string,
   };
 }

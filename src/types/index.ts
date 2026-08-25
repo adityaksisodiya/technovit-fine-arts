@@ -93,9 +93,9 @@ export interface Photo {
   title: string | null;
   description: string | null;
   status: PhotoStatus;
-  r2_original_key: string | null;
-  r2_display_key: string | null;
-  r2_thumbnail_key: string | null;
+  storage_original_key: string | null;
+  storage_display_key: string | null;
+  storage_thumb_key: string | null;
   blurhash: string | null;
   width: number | null;
   height: number | null;
@@ -106,6 +106,7 @@ export interface Photo {
   uploaded_from_ip: string | null;
   moderated_at: string | null;
   moderated_by: string | null;
+  uploaded_at: string | null;
   created_at: string;
   updated_at: string;
 }
