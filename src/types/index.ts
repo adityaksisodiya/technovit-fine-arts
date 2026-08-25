@@ -84,3 +84,45 @@ export interface AdminUser {
 export type AdminAuthResult =
   | { success: true; admin: AdminUser }
   | { success: false; error: 'UNAUTHENTICATED' | 'NOT_AN_ADMIN' | 'DEACTIVATED' | 'DB_ERROR' };
+
+/**
+ * Photo record model matching `photos` table.
+ */
+export interface Photo {
+  id: string;
+  title: string | null;
+  description: string | null;
+  status: PhotoStatus;
+  r2_original_key: string | null;
+  r2_display_key: string | null;
+  r2_thumbnail_key: string | null;
+  blurhash: string | null;
+  width: number | null;
+  height: number | null;
+  file_size_bytes: number | null;
+  content_type: string | null;
+  location_id: string | null;
+  booth_id: string | null;
+  uploaded_from_ip: string | null;
+  moderated_at: string | null;
+  moderated_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * Successful photo upload response.
+ */
+export interface UploadResponse {
+  id: string;
+  status: PhotoStatus;
+}
+
+/**
+ * Upload error response.
+ */
+export interface UploadErrorResponse {
+  error: string;
+  code?: string;
+  retryAfter?: number;
+}
