@@ -2,10 +2,10 @@
 
 Shared libraries, clients, and utilities.
 
-Subdirectories (created in later phases):
-- `supabase/` — Supabase client configuration (browser, server, admin)
-- `r2/` — Cloudflare R2 S3-compatible client
-- `sentry/` — Sentry error tracking initialization
-- `resend/` — Resend email client
-- `utils/` — image processing, validation schemas, error handling
-- `config.ts` — centralized configuration (env vars, defaults)
+Subdirectories:
+- `supabase/` — Supabase client configuration (browser, server, middleware)
+- `auth/` — Centralized server-side administrator authorization helpers
+- `storage/` — Backblaze B2 S3-compatible storage client & config
+- `sentry/` — Sentry error tracking initialization (Phase 6)
+- `resend/` — Resend email client (Phase 6)
+- `utils/` — Image processing, validation schemas, error handling (Phase 3D/4)
