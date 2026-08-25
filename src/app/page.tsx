@@ -1,10 +1,10 @@
+import { PhotoUpload } from "@/components/PhotoUpload";
 import styles from "./page.module.css";
 
 /**
- * Homepage — Phase 1 Placeholder
+ * Public Homepage — Fine Arts Club × VIT Chennai
  *
- * In Phase 4, this will become the photo gallery with masonry layout.
- * For now, it identifies the project and validates the design system.
+ * Anonymous photo upload portal and upcoming public gallery.
  */
 export default function Home() {
   return (
@@ -19,7 +19,7 @@ export default function Home() {
           <p className={styles.subtitle}>Photo Gallery</p>
         </header>
 
-        {/* Divider with artistic flair */}
+        {/* Divider with artistic diamond flair */}
         <div className={styles.dividerWrap}>
           <div className={styles.dividerLine} />
           <span className={styles.dividerIcon} aria-hidden="true">
@@ -28,61 +28,8 @@ export default function Home() {
           <div className={styles.dividerLine} />
         </div>
 
-        {/* Status message */}
-        <section className={styles.status}>
-          <p className={styles.statusText}>
-            The gallery is being prepared.
-          </p>
-          <p className={styles.statusDetail}>
-            Phase 1 — Foundation established. Design system active.
-          </p>
-        </section>
-
-        {/* Design token preview grid */}
-        <section className={styles.preview} aria-label="Design system preview">
-          <div className={styles.previewCard}>
-            <div className={styles.colorRow}>
-              <div
-                className={styles.colorSwatch}
-                style={{ backgroundColor: "var(--color-accent-primary)" }}
-                title="Terracotta"
-              />
-              <div
-                className={styles.colorSwatch}
-                style={{ backgroundColor: "var(--color-accent-secondary)" }}
-                title="Deep Navy"
-              />
-              <div
-                className={styles.colorSwatch}
-                style={{ backgroundColor: "var(--color-bg-tertiary)" }}
-                title="Warm Stone"
-              />
-              <div
-                className={styles.colorSwatch}
-                style={{ backgroundColor: "var(--color-text-primary)" }}
-                title="Ink"
-              />
-            </div>
-            <p className={styles.previewLabel}>Palette</p>
-          </div>
-
-          <div className={styles.previewCard}>
-            <p className={styles.previewSerif}>Playfair Display</p>
-            <p className={styles.previewSans}>Inter Sans-Serif</p>
-            <p className={styles.previewLabel}>Typography</p>
-          </div>
-
-          <div className={styles.previewCard}>
-            <div className={styles.breakpointList}>
-              <span className={styles.breakpointTag}>360</span>
-              <span className={styles.breakpointTag}>390</span>
-              <span className={styles.breakpointTag}>412</span>
-              <span className={styles.breakpointTag}>768</span>
-              <span className={styles.breakpointTag}>1440</span>
-            </div>
-            <p className={styles.previewLabel}>Breakpoints</p>
-          </div>
-        </section>
+        {/* Anonymous Photo Upload Component */}
+        <PhotoUpload />
 
         {/* Footer */}
         <footer className={styles.footer}>
