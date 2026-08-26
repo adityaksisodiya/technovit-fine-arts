@@ -1,0 +1,184 @@
+/* ============================================================
+   Admin Metrics Page Styles
+   ============================================================ */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  width: 100%;
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+}
+
+@media (min-width: 768px) {
+  .metricsGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.card {
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Storage Bar */
+.storageProgressTrack {
+  width: 100%;
+  height: 14px;
+  background-color: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  position: relative;
+}
+
+.storageProgressBar {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width var(--duration-normal) var(--ease-out);
+}
+
+.barNormal {
+  background-color: var(--color-success);
+}
+
+.barWarning {
+  background-color: var(--color-accent-primary);
+}
+
+.barCritical {
+  background-color: var(--color-error);
+}
+
+.storageStatsRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+}
+
+.storageHighlight {
+  font-weight: var(--weight-bold);
+  color: var(--color-text-primary);
+}
+
+/* Photo stats grid */
+.countsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+@media (min-width: 500px) {
+  .countsGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.countBox {
+  background-color: var(--color-bg-primary);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.countNum {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-primary);
+}
+
+.countLabel {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+}
+
+/* Diagnostic items */
+.diagList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+}
+
+.diagItem {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px dashed var(--color-border-subtle);
+}
+
+.diagLabel {
+  color: var(--color-text-secondary);
+}
+
+.diagValue {
+  font-family: monospace;
+  color: var(--color-text-primary);
+}
+
+.statusConnected {
+  color: var(--color-success);
+  font-weight: var(--weight-bold);
+}
+
+.statusDisconnected {
+  color: var(--color-error);
+  font-weight: var(--weight-bold);
+}
+
+/* Table */
+.auditTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-xs);
+  text-align: left;
+}
+
+.auditTh {
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-secondary);
+  font-weight: var(--weight-semibold);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.auditTd {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border-subtle);
+  color: var(--color-text-primary);
+}

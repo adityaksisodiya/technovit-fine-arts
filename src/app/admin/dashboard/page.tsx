@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { requireAdmin } from "@/lib/auth/admin";
+import { requireAdmin, hasRequiredRole } from "@/lib/auth/admin";
 import { getModerationStats } from "@/lib/moderation";
 import { AdminRole } from "@/types";
 import { logoutAction } from "../actions";
@@ -42,6 +42,9 @@ function formatRoleLabel(role: AdminRole): string {
 export default async function AdminDashboardPage() {
   const admin = await requireAdmin(AdminRole.MODERATOR, "/admin/dashboard");
   const stats = await getModerationStats();
+
+  const isAdminOrHigher = hasRequiredRole(admin.role, AdminRole.ADMIN);
+  const isSuperAdmin = hasRequiredRole(admin.role, AdminRole.SUPER_ADMIN);
 
   return (
     <div className={styles.container}>
@@ -85,9 +88,9 @@ export default async function AdminDashboardPage() {
         </div>
       </section>
 
-      {/* Active & Planned Modules */}
+      {/* Active Management Modules */}
       <section className={styles.grid} aria-label="Management modules">
-        {/* Active Moderation Queue Module */}
+        {/* Moderation Queue Module */}
         <Link
           href="/admin/moderation"
           className={`${styles.moduleCard} card card--interactive`}
@@ -113,40 +116,89 @@ export default async function AdminDashboardPage() {
         </Link>
 
         {/* Photo Management Module */}
-        <div className={styles.moduleCard}>
-          <div className={styles.moduleHeader}>
-            <span className={styles.moduleIcon} aria-hidden="true">📸</span>
-            <span className={styles.moduleStatus}>Phase 4</span>
+        {isAdminOrHigher ? (
+          <Link
+            href="/admin/photos"
+            className={`${styles.moduleCard} card card--interactive`}
+            id="photo-management-module-link"
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            <div className={styles.moduleHeader}>
+              <span className={styles.moduleIcon} aria-hidden="true">📸</span>
+              <span className={styles.moduleStatus} style={{ color: "var(--color-success)" }}>
+                ● Active
+              </span>
+            </div>
+            <h2 className={styles.moduleTitle}>Photo Management</h2>
+            <p className={styles.moduleDesc}>
+              Browse, search, filter, edit metadata, soft delete, and inspect complete audit history of all photographs.
+            </p>
+          </Link>
+        ) : (
+          <div className={styles.moduleCard} style={{ opacity: 0.6 }}>
+            <div className={styles.moduleHeader}>
+              <span className={styles.moduleIcon} aria-hidden="true">📸</span>
+              <span className={styles.moduleStatus}>Admin Required</span>
+            </div>
+            <h2 className={styles.moduleTitle}>Photo Management</h2>
+            <p className={styles.moduleDesc}>
+              Browse, search, filter, edit metadata, and manage approved and archived gallery photographs.
+            </p>
           </div>
-          <h2 className={styles.moduleTitle}>Photo Management</h2>
-          <p className={styles.moduleDesc}>
-            Browse, search, filter, edit metadata, and manage approved and archived gallery photographs.
-          </p>
-        </div>
+        )}
 
-        {/* Locations & Booths Module */}
-        <div className={styles.moduleCard}>
-          <div className={styles.moduleHeader}>
-            <span className={styles.moduleIcon} aria-hidden="true">📍</span>
-            <span className={styles.moduleStatus}>Phase 5</span>
+        {/* Storage & System Metrics Module */}
+        {isAdminOrHigher ? (
+          <Link
+            href="/admin/metrics"
+            className={`${styles.moduleCard} card card--interactive`}
+            id="metrics-module-link"
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            <div className={styles.moduleHeader}>
+              <span className={styles.moduleIcon} aria-hidden="true">📊</span>
+              <span className={styles.moduleStatus} style={{ color: "var(--color-success)" }}>
+                ● Active
+              </span>
+            </div>
+            <h2 className={styles.moduleTitle}>System & Storage Metrics</h2>
+            <p className={styles.moduleDesc}>
+              Monitor Backblaze B2 storage capacity against the 7.5 GB hard-stop, audit logs, and trigger maintenance cleanup.
+            </p>
+          </Link>
+        ) : (
+          <div className={styles.moduleCard} style={{ opacity: 0.6 }}>
+            <div className={styles.moduleHeader}>
+              <span className={styles.moduleIcon} aria-hidden="true">📊</span>
+              <span className={styles.moduleStatus}>Admin Required</span>
+            </div>
+            <h2 className={styles.moduleTitle}>System & Storage Metrics</h2>
+            <p className={styles.moduleDesc}>
+              Monitor Backblaze B2 storage capacity against the 7.5 GB hard-stop, audit logs, and system error events.
+            </p>
           </div>
-          <h2 className={styles.moduleTitle}>Locations & Booths</h2>
-          <p className={styles.moduleDesc}>
-            Configure campus event zones, photo booths, and art stations with GPS coordinates.
-          </p>
-        </div>
+        )}
 
-        {/* Storage Metrics Module */}
-        <div className={styles.moduleCard}>
-          <div className={styles.moduleHeader}>
-            <span className={styles.moduleIcon} aria-hidden="true">📊</span>
-            <span className={styles.moduleStatus}>Phase 6</span>
-          </div>
-          <h2 className={styles.moduleTitle}>System & Storage Metrics</h2>
-          <p className={styles.moduleDesc}>
-            Monitor Backblaze B2 storage capacity against the 7.5 GB hard-stop, audit logs, and system error events.
-          </p>
-        </div>
+        {/* Super Admin User Management Module */}
+        {isSuperAdmin && (
+          <Link
+            href="/admin/users"
+            className={`${styles.moduleCard} card card--interactive`}
+            id="user-management-module-link"
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            <div className={styles.moduleHeader}>
+              <span className={styles.moduleIcon} aria-hidden="true">👥</span>
+              <span className={styles.moduleStatus} style={{ color: "var(--color-accent-primary)" }}>
+                Super Admin
+              </span>
+            </div>
+            <h2 className={styles.moduleTitle}>Admin User Control</h2>
+            <p className={styles.moduleDesc}>
+              Provision new moderator and administrator accounts, modify privileges, and suspend/activate access.
+            </p>
+          </Link>
+        )}
       </section>
 
       {/* Footer */}

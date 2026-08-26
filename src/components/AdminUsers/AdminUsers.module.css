@@ -1,0 +1,129 @@
+/* ============================================================
+   Admin User Management Styles
+   ============================================================ */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  width: 100%;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: var(--text-xs);
+}
+
+.th {
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-secondary);
+  font-weight: var(--weight-semibold);
+  border-bottom: 1px solid var(--color-border);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+}
+
+.td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border-subtle);
+  color: var(--color-text-primary);
+  vertical-align: middle;
+}
+
+.roleSuperAdmin {
+  background-color: rgba(196, 85, 58, 0.2);
+  color: var(--color-accent-primary);
+  border: 1px solid var(--color-accent-primary);
+}
+
+.roleAdmin {
+  background-color: rgba(43, 90, 142, 0.2);
+  color: #5c9be6;
+  border: 1px solid #5c9be6;
+}
+
+.roleModerator {
+  background-color: rgba(62, 142, 65, 0.2);
+  color: var(--color-success);
+  border: 1px solid var(--color-success);
+}
+
+/* Modal */
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(10, 8, 7, 0.85);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+}
+
+.modalContent {
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  max-width: 500px;
+  width: 100%;
+  box-shadow: var(--shadow-xl);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-bg-primary);
+}
+
+.modalTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+}
+
+.modalBody {
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.modalFooter {
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-bg-primary);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}

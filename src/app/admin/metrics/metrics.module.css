@@ -1,0 +1,74 @@
+.container {
+  min-height: 100dvh;
+  padding: var(--space-8) var(--gutter);
+  max-width: 1200px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  animation: fadeIn var(--duration-normal) var(--ease-out) both;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+}
+
+.brandTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-primary);
+}
+
+.brandSub {
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+}
+
+@media (min-width: 768px) {
+  .metricsGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.footer {
+  text-align: center;
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-border-subtle);
+  margin-top: auto;
+}
+
+.footerText {
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
