@@ -1,0 +1,275 @@
+/* ============================================================
+   Campus Spaces Map Styles (Mobile-First)
+   ============================================================ */
+
+.mapContainer {
+  width: 100%;
+  max-width: var(--width-container);
+  margin-inline: auto;
+  padding: var(--space-4) 0 var(--space-16);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.mapHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-2);
+}
+
+.mapTitle {
+  font-family: var(--font-display);
+  font-size: clamp(var(--text-2xl), 4.5vw, var(--text-5xl));
+  font-weight: var(--weight-bold);
+}
+
+.mapSubtitle {
+  font-size: clamp(var(--text-xs), 2.5vw, var(--text-sm));
+  color: var(--color-text-secondary);
+  max-width: 48ch;
+  line-height: 1.5;
+}
+
+/* Map Blueprint Canvas */
+.canvasWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  min-height: 380px;
+  background-color: #12100E;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--color-border-strong);
+  box-shadow: var(--shadow-photo-hover);
+}
+
+@media (min-width: 768px) {
+  .canvasWrapper {
+    min-height: 480px;
+    border-radius: var(--radius-xl);
+  }
+}
+
+/* Blueprint Grid Background */
+.canvasBlueprint {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px;
+  background-position: -1px -1px;
+}
+
+/* Compass / Technical Marks */
+.compassMark {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: var(--tracking-widest);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 3px 8px;
+  border-radius: var(--radius-xs);
+}
+
+.mapPlaceholderArt {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: var(--space-2);
+  color: rgba(255, 255, 255, 0.22);
+  font-family: var(--font-techno);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-widest);
+  font-size: 11px;
+  pointer-events: none;
+}
+
+/* Location Marker Pins */
+.markerPin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  transition: transform var(--duration-fast) var(--ease-spring);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.markerPin:hover {
+  transform: translate(-50%, -50%) scale(1.15);
+  z-index: 20;
+}
+
+.markerBeacon {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: var(--weight-bold);
+  box-shadow: 0 0 14px currentColor;
+  position: relative;
+}
+
+.markerBeacon::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  opacity: 0.6;
+  animation: pulseBeacon 2s infinite ease-out;
+}
+
+@keyframes pulseBeacon {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  100% { transform: scale(1.7); opacity: 0; }
+}
+
+.markerLabel {
+  background-color: rgba(18, 16, 14, 0.88);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
+  font-family: var(--font-techno);
+  font-size: 9.5px;
+  font-weight: var(--weight-semibold);
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  white-space: nowrap;
+}
+
+/* Location Detail Card */
+.locationCard {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  max-width: 360px;
+  width: calc(100% - 24px);
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-elevated);
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  animation: slideUp var(--duration-fast) var(--ease-out);
+}
+
+.locationCardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.zoneTag {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--color-accent-primary);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  font-weight: var(--weight-bold);
+}
+
+.locationCardTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-primary);
+}
+
+.locationCardDesc {
+  font-size: 11.5px;
+  color: var(--color-text-secondary);
+  line-height: 1.45;
+}
+
+.locationCardActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding-top: var(--space-1);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Promo Popup on Homepage */
+.promoPopup {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 90;
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-4);
+  box-shadow: var(--shadow-elevated);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  max-width: 340px;
+  width: calc(100% - 32px);
+  animation: slideInRight var(--duration-normal) var(--ease-spring);
+}
+
+.promoIcon {
+  font-size: 1.5rem;
+}
+
+.promoContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.promoTitle {
+  font-family: var(--font-techno);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-primary);
+}
+
+.promoText {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+.promoClose {
+  background: transparent;
+  border: none;
+  color: var(--color-text-tertiary);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  padding: 4px;
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,226 @@
+/* ============================================================
+   Navigation Bar Styles (Mobile-First)
+   ============================================================ */
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  background-color: var(--color-bg-frosted);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--color-border-subtle);
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.container {
+  max-width: var(--width-container);
+  margin-inline: auto;
+  padding: var(--space-2) var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: 58px;
+}
+
+/* Logos & Branding */
+.brandGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.facBrandLink {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  border-radius: var(--radius-sm);
+  transition: opacity var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-spring);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.facBrandLink:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+.facBrandLink:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 3px;
+}
+
+.clubLogo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.logoIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--color-accent-primary) 0%, var(--color-accent-gold) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: var(--weight-bold);
+  font-size: 13px;
+  box-shadow: 0 2px 8px rgba(226, 78, 43, 0.3);
+}
+
+.logoTextContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.clubTitle {
+  font-family: var(--font-techno);
+  font-size: 13px;
+  font-weight: var(--weight-extrabold);
+  letter-spacing: var(--tracking-wider);
+  color: var(--color-text-primary);
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.clubSubtitle {
+  font-size: 9.5px;
+  font-family: var(--font-mono);
+  color: var(--color-text-tertiary);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+}
+
+.divider {
+  width: 1px;
+  height: 20px;
+  background-color: var(--color-border);
+}
+
+.vitBadge {
+  font-family: var(--font-techno);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wide);
+  padding: 2px 6px;
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xs);
+  color: var(--color-text-secondary);
+}
+
+/* Nav Links */
+.navLinks {
+  display: none;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+@media (min-width: 768px) {
+  .navLinks {
+    display: flex;
+  }
+}
+
+.navLink {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-xs);
+  font-family: var(--font-techno);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-full);
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.navLink:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-secondary);
+}
+
+.navLinkActive {
+  color: var(--color-accent-primary);
+  background-color: var(--color-accent-primary-light);
+  font-weight: var(--weight-bold);
+}
+
+.navLinkSpecial {
+  background-color: var(--color-text-primary);
+  color: var(--color-text-inverse);
+  padding: var(--space-2) var(--space-5);
+  box-shadow: 0 2px 10px rgba(23, 20, 18, 0.15);
+}
+
+.navLinkSpecial:hover {
+  background-color: var(--color-accent-primary);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* Mobile Toggle */
+.mobileToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--color-text-primary);
+  font-size: 18px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (min-width: 768px) {
+  .mobileToggle {
+    display: none;
+  }
+}
+
+/* Mobile Drawer */
+.mobileDrawer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--gutter) var(--space-5);
+  background-color: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-border);
+  animation: slideDown var(--duration-fast) var(--ease-out);
+}
+
+.mobileLink {
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-techno);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-secondary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 48px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobileLink:active {
+  transform: scale(0.98);
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -127,3 +127,16 @@ export interface UploadErrorResponse {
   code?: string;
   retryAfter?: number;
 }
+
+/**
+ * Sanitized public photo DTO sent to the client browser.
+ */
+export interface PublicPhoto {
+  id: string;
+  blurhash: string | null;
+  width: number | null;
+  height: number | null;
+  created_at: string;
+  thumbUrl: string;
+  displayUrl: string;
+}

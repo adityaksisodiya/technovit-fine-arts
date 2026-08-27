@@ -1,38 +1,45 @@
 import type { Metadata, Viewport } from "next";
-import { Playfair_Display, Inter } from "next/font/google";
+import { Playfair_Display, Inter, Outfit, JetBrains_Mono } from "next/font/google";
+import { LivingCanvas } from "@/components/Background";
 
 import "@/styles/globals.css";
 import "@/styles/components.css";
 
-/**
- * Playfair Display — editorial display serif for headings.
- * Gives the gallery its distinctive Fine Arts identity.
- */
 const playfairDisplay = Playfair_Display({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-display",
-  weight: ["400", "500", "600", "700"],
+  variable: "--font-playfair",
+  weight: ["400", "500", "600", "700", "800"],
 });
 
-/**
- * Inter — clean, highly legible sans-serif for body text.
- * Excellent readability on mobile screens.
- */
+const outfit = Outfit({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-outfit",
+  weight: ["400", "500", "600", "700", "800"],
+});
+
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-body",
+  variable: "--font-inter",
   weight: ["400", "500", "600", "700"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-mono-code",
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "TechnoVIT Photo Gallery — Fine Arts Club, VIT Chennai",
-    template: "%s | TechnoVIT Photo Gallery",
+    default: "TechnoVIT Photo Wall — Fine Arts Club × VIT Chennai",
+    template: "%s | TechnoVIT Photo Wall",
   },
   description:
-    "Explore and share photography from TechnoVIT, captured by the Fine Arts Club of VIT Chennai. Browse the gallery, upload your moments, and celebrate creativity.",
+    "An interactive living wall of TechnoVIT festival moments, curated and captured by the Fine Arts Club of VIT Chennai. Browse the installation, explore the campus map, and drop your memories.",
   keywords: [
     "TechnoVIT",
     "VIT Chennai",
@@ -41,13 +48,14 @@ export const metadata: Metadata = {
     "photography",
     "student art",
     "college festival",
+    "memory wall",
   ],
   authors: [{ name: "Fine Arts Club, VIT Chennai" }],
   openGraph: {
-    title: "TechnoVIT Photo Gallery — Fine Arts Club, VIT Chennai",
+    title: "TechnoVIT Photo Wall — Fine Arts Club × VIT Chennai",
     description:
-      "Photography from TechnoVIT, captured and curated by the Fine Arts Club of VIT Chennai.",
-    siteName: "TechnoVIT Photo Gallery",
+      "A living photographic installation of TechnoVIT festival memories, captured by students and curated by the Fine Arts Club.",
+    siteName: "TechnoVIT Photo Wall",
     type: "website",
     locale: "en_IN",
   },
@@ -61,13 +69,25 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: "#FAF8F5",
+  themeColor: "#FAF7F2",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en" className={`${playfairDisplay.variable} ${inter.variable}`}>
-      <body>{children}</body>
+    <html
+      lang="en"
+      className={`${playfairDisplay.variable} ${outfit.variable} ${inter.variable} ${jetbrainsMono.variable}`}
+    >
+      <body>
+        {/* Dynamic GPU-Accelerated Living Background Canvas */}
+        <LivingCanvas />
+
+        {children}
+      </body>
     </html>
   );
 }

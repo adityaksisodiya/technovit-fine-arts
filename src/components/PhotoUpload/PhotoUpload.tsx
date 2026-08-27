@@ -167,9 +167,9 @@ export function PhotoUpload({ boothId, onUploadSuccess }: PhotoUploadProps) {
       id="photo-upload-section"
     >
       <header className={styles.uploadCardHeader}>
-        <h2 className={styles.uploadTitle}>Share Your Art</h2>
+        <h3 className={styles.uploadTitle}>Select or Drop Photograph</h3>
         <p className={styles.uploadSubtitle}>
-          Contribute your photos to the TechnoVIT Fine Arts Gallery
+          Supports JPEG, PNG, or WebP up to 10 MB
         </p>
       </header>
 
@@ -234,7 +234,7 @@ export function PhotoUpload({ boothId, onUploadSuccess }: PhotoUploadProps) {
             drag photo here
           </p>
           <p className={styles.hintText}>
-            JPEG, PNG, or WebP • Up to 10 MB • Auto-optimized
+            JPEG, PNG, or WebP • Up to 10 MB
           </p>
         </div>
       )}
