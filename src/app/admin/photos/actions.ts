@@ -73,3 +73,20 @@ export async function getPhotoDetailsAction(photoId: string) {
   await requireAdmin(AdminRole.ADMIN);
   return await getAdminPhotoDetails(photoId);
 }
+
+/**
+ * Server action to fetch available locations for photo assignment dropdown.
+ */
+export async function getAvailableLocationsAction() {
+  await requireAdmin(AdminRole.ADMIN);
+  const { getAdminLocations } = await import("@/lib/map/service");
+  return await getAdminLocations();
+}
+
+/**
+ * Server action to assign or remove photo location.
+ */
+export async function updatePhotoLocationAction(photoId: string, locationId: string | null) {
+  const { assignPhotoLocationAction } = await import("@/lib/map/actions");
+  return await assignPhotoLocationAction(photoId, locationId);
+}

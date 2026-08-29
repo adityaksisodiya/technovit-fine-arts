@@ -14,11 +14,13 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const cursor = searchParams.get("cursor");
     const limitParam = searchParams.get("limit");
+    const locationId = searchParams.get("locationId") || searchParams.get("location_id");
     const limit = limitParam ? parseInt(limitParam, 10) : 18;
 
     const result = await getPublicGalleryPhotos({
       cursor: cursor || undefined,
       limit: isNaN(limit) ? 18 : limit,
+      locationId: locationId || undefined,
     });
 
     return NextResponse.json(result, {

@@ -46,6 +46,7 @@ export function toPublicPhoto(photo: Photo): PublicPhoto {
 export interface GetPublicGalleryOptions {
   cursor?: string | null; // ISO timestamp for pagination (created_at < cursor)
   limit?: number;
+  locationId?: string | null;
 }
 
 /**
@@ -60,7 +61,7 @@ export interface GetPublicGalleryOptions {
 export async function getPublicGalleryPhotos(
   options: GetPublicGalleryOptions = {}
 ): Promise<PublicGalleryResult> {
-  const { cursor, limit = 18 } = options;
+  const { cursor, limit = 18, locationId } = options;
   const clampedLimit = Math.min(Math.max(1, limit), 50);
 
   const supabase = createAdminClient();
@@ -69,12 +70,16 @@ export async function getPublicGalleryPhotos(
   let query = supabase
     .from("photos")
     .select(
-      "id, blurhash, width, height, created_at, updated_at, moderated_at, status",
+      "id, blurhash, width, height, created_at, updated_at, moderated_at, status, location_id",
       { count: "exact" }
     )
     .eq("status", PhotoStatus.APPROVED)
     .order("created_at", { ascending: false })
     .limit(clampedLimit + 1); // Fetch 1 extra to detect hasMore
+
+  if (locationId) {
+    query = query.eq("location_id", locationId);
+  }
 
   if (cursor) {
     query = query.lt("created_at", cursor);

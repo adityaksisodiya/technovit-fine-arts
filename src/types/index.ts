@@ -139,4 +139,57 @@ export interface PublicPhoto {
   created_at: string;
   thumbUrl: string;
   displayUrl: string;
+  location_id?: string | null;
+}
+
+/**
+ * Location category types for map pins.
+ */
+export type LocationCategory =
+  | 'photo_booth'
+  | 'stage'
+  | 'exhibition'
+  | 'event'
+  | 'entrance'
+  | 'custom';
+
+/**
+ * Full Location record matching database `locations` table.
+ */
+export interface Location {
+  id: string;
+  name: string;
+  description: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  address: string | null;
+  map_x: number | null; // Normalized 0.0 - 1.0
+  map_y: number | null; // Normalized 0.0 - 1.0
+  category: LocationCategory;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * Admin Location with photo count statistics.
+ */
+export interface LocationWithCount extends Location {
+  approved_photo_count: number;
+  total_photo_count: number;
+  preview_photos?: PublicPhoto[];
+}
+
+/**
+ * Sanitized public location DTO for the interactive map.
+ */
+export interface PublicLocation {
+  id: string;
+  name: string;
+  description: string | null;
+  map_x: number; // 0.0 - 1.0
+  map_y: number; // 0.0 - 1.0
+  category: LocationCategory;
+  approved_photo_count: number;
+  preview_photos: PublicPhoto[];
 }

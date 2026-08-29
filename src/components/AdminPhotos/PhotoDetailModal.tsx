@@ -2,8 +2,14 @@
 
 import { useEffect, useState } from "react";
 import type { PhotoDetailData } from "@/lib/admin-photos";
-import { getPhotoDetailsAction, updatePhotoStatusAction, purgePhotoAction } from "@/app/admin/photos/actions";
-import { PhotoStatus, AdminRole } from "@/types";
+import {
+  getPhotoDetailsAction,
+  updatePhotoStatusAction,
+  purgePhotoAction,
+  getAvailableLocationsAction,
+  updatePhotoLocationAction,
+} from "@/app/admin/photos/actions";
+import { PhotoStatus, AdminRole, type LocationWithCount } from "@/types";
 import styles from "./PhotoManagement.module.css";
 
 interface PhotoDetailModalProps {
@@ -26,6 +32,12 @@ export function PhotoDetailModal({
   const [rejectReason, setRejectReason] = useState<string>("");
   const [showRejectInput, setShowRejectInput] = useState<boolean>(false);
 
+  // Location assignment state
+  const [locations, setLocations] = useState<LocationWithCount[]>([]);
+  const [selectedLocationId, setSelectedLocationId] = useState<string>("");
+  const [locationSaving, setLocationSaving] = useState<boolean>(false);
+  const [locationFeedback, setLocationFeedback] = useState<string | null>(null);
+
   useEffect(() => {
     if (!photoId) return;
 
@@ -33,9 +45,15 @@ export function PhotoDetailModal({
 
     async function loadData() {
       try {
-        const res = await getPhotoDetailsAction(photoId!);
+        const [photoRes, locsRes] = await Promise.all([
+          getPhotoDetailsAction(photoId!),
+          getAvailableLocationsAction(),
+        ]);
+
         if (mounted) {
-          setData(res);
+          setData(photoRes);
+          setLocations(locsRes || []);
+          setSelectedLocationId(photoRes?.photo.location_id || "");
           setLoading(false);
         }
       } catch (err) {
@@ -69,8 +87,27 @@ export function PhotoDetailModal({
     }
   };
 
+  const handleLocationSave = async () => {
+    setLocationSaving(true);
+    setLocationFeedback(null);
+    const targetLoc = selectedLocationId ? selectedLocationId : null;
+    const res = await updatePhotoLocationAction(photoId, targetLoc);
+    setLocationSaving(false);
+
+    if (res.success) {
+      setLocationFeedback("Location updated successfully.");
+      onRefresh();
+    } else {
+      setError(res.error || "Failed to update location");
+    }
+  };
+
   const handlePurge = async () => {
-    if (!confirm("Are you sure you want to PERMANENTLY delete this photo and purge all B2 storage objects? This cannot be undone.")) {
+    if (
+      !confirm(
+        "Are you sure you want to PERMANENTLY delete this photo and purge all B2 storage objects? This cannot be undone."
+      )
+    ) {
       return;
     }
     setActionLoading(true);
@@ -143,6 +180,12 @@ export function PhotoDetailModal({
                     </span>
                   </div>
                   <div className={styles.metaItem}>
+                    <span className={styles.metaLabel}>Current Location:</span>
+                    <span className={styles.metaVal}>
+                      {data.photo.location_name || "Unassigned"}
+                    </span>
+                  </div>
+                  <div className={styles.metaItem}>
                     <span className={styles.metaLabel}>Uploaded IP:</span>
                     <span className={styles.metaVal}>{data.photo.uploaded_from_ip || "N/A"}</span>
                   </div>
@@ -167,6 +210,60 @@ export function PhotoDetailModal({
                     </div>
                   )}
                 </div>
+              </div>
+
+              {/* Photo-Location Association Selector */}
+              <div
+                style={{
+                  backgroundColor: "var(--color-bg-primary)",
+                  padding: "var(--space-4)",
+                  borderRadius: "var(--radius-md)",
+                  border: "1px solid var(--color-border)",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "var(--space-2)",
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "var(--font-techno)",
+                    fontSize: "var(--text-xs)",
+                    fontWeight: "bold",
+                    textTransform: "uppercase",
+                    letterSpacing: "var(--tracking-wider)",
+                    color: "var(--color-text-secondary)",
+                  }}
+                >
+                  🗺️ Assign Campus Location
+                </span>
+                <div style={{ display: "flex", gap: "var(--space-2)", flexWrap: "wrap" }}>
+                  <select
+                    className="select"
+                    value={selectedLocationId}
+                    onChange={(e) => setSelectedLocationId(e.target.value)}
+                    style={{ flex: 1, minWidth: "200px" }}
+                  >
+                    <option value="">-- No Location (Unassigned) --</option>
+                    {locations.map((loc) => (
+                      <option key={loc.id} value={loc.id}>
+                        {loc.name} {loc.is_active ? "" : "(Disabled)"}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    className="btn btn--secondary"
+                    disabled={locationSaving}
+                    onClick={handleLocationSave}
+                  >
+                    {locationSaving ? "Saving..." : "Save Location"}
+                  </button>
+                </div>
+                {locationFeedback && (
+                  <span style={{ fontSize: "11px", color: "var(--color-success)" }}>
+                    {locationFeedback}
+                  </span>
+                )}
               </div>
 
               {/* Rejection input prompt */}
@@ -198,107 +295,134 @@ export function PhotoDetailModal({
                 </div>
               )}
 
-              {/* Moderation History */}
-              <div className={styles.timelineSection}>
-                <h3 className={styles.timelineTitle}>Moderation History</h3>
-                {data.history.length === 0 ? (
-                  <p style={{ fontSize: "var(--text-xs)", color: "var(--color-text-tertiary)" }}>
-                    No moderation history recorded yet.
-                  </p>
-                ) : (
-                  data.history.map((h) => (
-                    <div key={h.id} className={styles.timelineItem}>
-                      <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <strong>{h.action.toUpperCase()} ({h.previous_status} → {h.new_status})</strong>
-                        <span>{new Date(h.created_at).toLocaleString()}</span>
-                      </div>
-                      {h.reason && <p style={{ fontStyle: "italic" }}>Reason: &quot;{h.reason}&quot;</p>}
-                      <span style={{ color: "var(--color-text-secondary)" }}>
-                        By: {h.admin_name || h.admin_email || h.admin_id || "System"}
-                      </span>
-                    </div>
-                  ))
+              {/* Status Actions */}
+              <div className={styles.modalActions}>
+                {data.photo.status !== PhotoStatus.APPROVED && (
+                  <button
+                    type="button"
+                    className="btn btn--primary"
+                    disabled={actionLoading}
+                    onClick={() => handleStatusUpdate(PhotoStatus.APPROVED)}
+                  >
+                    Approve Photo
+                  </button>
+                )}
+
+                {data.photo.status !== PhotoStatus.REJECTED && !showRejectInput && (
+                  <button
+                    type="button"
+                    className="btn btn--secondary"
+                    disabled={actionLoading}
+                    onClick={() => setShowRejectInput(true)}
+                  >
+                    Reject Photo...
+                  </button>
+                )}
+
+                {data.photo.status !== PhotoStatus.DELETED && (
+                  <button
+                    type="button"
+                    className="btn btn--ghost"
+                    disabled={actionLoading}
+                    onClick={() => handleStatusUpdate(PhotoStatus.DELETED, "Soft deleted by admin")}
+                  >
+                    Soft Delete
+                  </button>
+                )}
+
+                {data.photo.status === PhotoStatus.DELETED && (
+                  <button
+                    type="button"
+                    className="btn btn--secondary"
+                    disabled={actionLoading}
+                    onClick={() => handleStatusUpdate(PhotoStatus.APPROVED, "Restored by admin")}
+                  >
+                    Restore
+                  </button>
+                )}
+
+                {isSuperAdmin && (
+                  <button
+                    type="button"
+                    className="btn btn--danger"
+                    disabled={actionLoading}
+                    onClick={handlePurge}
+                    style={{ marginLeft: "auto" }}
+                  >
+                    Permanent Purge
+                  </button>
                 )}
               </div>
 
-              {/* Audit Logs */}
-              <div className={styles.timelineSection}>
-                <h3 className={styles.timelineTitle}>Audit Logs</h3>
-                {data.auditLogs.length === 0 ? (
-                  <p style={{ fontSize: "var(--text-xs)", color: "var(--color-text-tertiary)" }}>
-                    No audit log entries found.
-                  </p>
-                ) : (
-                  data.auditLogs.map((a) => (
-                    <div key={a.id} className={styles.timelineItem}>
-                      <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <strong>{a.action}</strong>
-                        <span>{new Date(a.created_at).toLocaleString()}</span>
-                      </div>
-                      <span style={{ color: "var(--color-text-secondary)" }}>
-                        Actor: {a.admin_email || a.admin_id || "System"} | IP: {a.ip_address || "N/A"}
-                      </span>
-                    </div>
-                  ))
-                )}
+              {/* Moderation History Table */}
+              <div className={styles.sectionHeader}>
+                <h3 className={styles.sectionTitle}>Moderation History</h3>
               </div>
+              {data.history.length === 0 ? (
+                <p className={styles.emptyNote}>No moderation events recorded yet.</p>
+              ) : (
+                <div className={styles.subTableWrapper}>
+                  <table className={styles.subTable}>
+                    <thead>
+                      <tr>
+                        <th>Action</th>
+                        <th>Transition</th>
+                        <th>Admin</th>
+                        <th>Reason</th>
+                        <th>Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.history.map((h) => (
+                        <tr key={h.id}>
+                          <td>
+                            <strong>{h.action}</strong>
+                          </td>
+                          <td>
+                            {h.previous_status} → {h.new_status}
+                          </td>
+                          <td>{h.admin_name || h.admin_email || "System"}</td>
+                          <td>{h.reason || "—"}</td>
+                          <td>{new Date(h.created_at).toLocaleString()}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              {/* Audit Log Table */}
+              <div className={styles.sectionHeader}>
+                <h3 className={styles.sectionTitle}>Audit Log Entries</h3>
+              </div>
+              {data.auditLogs.length === 0 ? (
+                <p className={styles.emptyNote}>No audit log entries for this photo.</p>
+              ) : (
+                <div className={styles.subTableWrapper}>
+                  <table className={styles.subTable}>
+                    <thead>
+                      <tr>
+                        <th>Action</th>
+                        <th>IP Address</th>
+                        <th>Admin</th>
+                        <th>Timestamp</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.auditLogs.map((a) => (
+                        <tr key={a.id}>
+                          <td>{a.action}</td>
+                          <td>{a.ip_address || "—"}</td>
+                          <td>{a.admin_email || "System"}</td>
+                          <td>{new Date(a.created_at).toLocaleString()}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </>
           ) : null}
-        </div>
-
-        <div className={styles.modalFooter}>
-          {data && (
-            <>
-              {data.photo.status !== PhotoStatus.APPROVED && (
-                <button
-                  type="button"
-                  className="btn btn--secondary"
-                  disabled={actionLoading}
-                  onClick={() => handleStatusUpdate(PhotoStatus.APPROVED)}
-                >
-                  ✓ Approve Photo
-                </button>
-              )}
-
-              {data.photo.status !== PhotoStatus.REJECTED && !showRejectInput && (
-                <button
-                  type="button"
-                  className="btn btn--secondary"
-                  disabled={actionLoading}
-                  onClick={() => setShowRejectInput(true)}
-                >
-                  ✕ Reject Photo
-                </button>
-              )}
-
-              {data.photo.status !== PhotoStatus.DELETED && (
-                <button
-                  type="button"
-                  className="btn btn--ghost"
-                  disabled={actionLoading}
-                  onClick={() => handleStatusUpdate(PhotoStatus.DELETED, "Admin soft-deleted")}
-                >
-                  Soft Delete
-                </button>
-              )}
-
-              {isSuperAdmin && (
-                <button
-                  type="button"
-                  className="btn btn--ghost"
-                  style={{ color: "var(--color-error)" }}
-                  disabled={actionLoading}
-                  onClick={handlePurge}
-                >
-                  Purge from B2 & DB
-                </button>
-              )}
-            </>
-          )}
-
-          <button type="button" className="btn btn--secondary" onClick={onClose}>
-            Close
-          </button>
         </div>
       </div>
     </div>

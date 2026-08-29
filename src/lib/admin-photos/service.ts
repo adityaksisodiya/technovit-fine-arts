@@ -13,6 +13,7 @@ import { hasRequiredRole } from "@/lib/auth/admin";
 export interface AdminPhotoItem extends Photo {
   moderator_name?: string | null;
   moderator_email?: string | null;
+  location_name?: string | null;
 }
 
 export interface GetAdminPhotosOptions {
@@ -198,10 +199,21 @@ export async function getAdminPhotoDetails(
     }
   }
 
+  let locationName: string | null = null;
+  if (photo.location_id) {
+    const { data: loc } = await supabase
+      .from("locations")
+      .select("name")
+      .eq("id", photo.location_id)
+      .maybeSingle();
+    locationName = loc?.name || null;
+  }
+
   const enrichedPhoto: AdminPhotoItem = {
     ...photo,
     moderator_name: photo.moderated_by ? adminMap[photo.moderated_by]?.display_name : null,
     moderator_email: photo.moderated_by ? adminMap[photo.moderated_by]?.email : null,
+    location_name: locationName,
   };
 
   const enrichedHistory: PhotoHistoryItem[] = (historyData || []).map((h) => ({

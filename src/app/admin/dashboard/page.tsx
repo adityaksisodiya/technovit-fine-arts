@@ -179,6 +179,38 @@ export default async function AdminDashboardPage() {
           </div>
         )}
 
+        {/* Campus Map Management Module (Super Admin Only) */}
+        {isSuperAdmin ? (
+          <Link
+            href="/admin/map"
+            className={`${styles.moduleCard} card card--interactive`}
+            id="map-management-module-link"
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            <div className={styles.moduleHeader}>
+              <span className={styles.moduleIcon} aria-hidden="true">🗺️</span>
+              <span className={styles.moduleStatus} style={{ color: "var(--color-accent-primary)" }}>
+                Super Admin
+              </span>
+            </div>
+            <h2 className={styles.moduleTitle}>Campus Map & Locations</h2>
+            <p className={styles.moduleDesc}>
+              Manage interactive festival map locations, place and drag pins with normalized coordinates, and toggle visibility.
+            </p>
+          </Link>
+        ) : (
+          <div className={styles.moduleCard} style={{ opacity: 0.6 }}>
+            <div className={styles.moduleHeader}>
+              <span className={styles.moduleIcon} aria-hidden="true">🗺️</span>
+              <span className={styles.moduleStatus}>Super Admin Required</span>
+            </div>
+            <h2 className={styles.moduleTitle}>Campus Map & Locations</h2>
+            <p className={styles.moduleDesc}>
+              Manage interactive festival map locations and pin coordinates across the VIT Chennai campus.
+            </p>
+          </div>
+        )}
+
         {/* Super Admin User Management Module */}
         {isSuperAdmin && (
           <Link
