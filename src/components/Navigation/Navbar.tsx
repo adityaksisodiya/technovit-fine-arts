@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ASSETS } from "@/config/assets";
@@ -18,6 +19,7 @@ export function Navbar() {
       <div className={styles.container}>
         {/* Brand / Dual Logo */}
         <div className={styles.brandGroup}>
+          {/* Fine Arts Club Brand Link (Navigates to facvitc.in) */}
           <a
             href="https://facvitc.in/"
             className={styles.facBrandLink}
@@ -25,8 +27,15 @@ export function Navbar() {
             onClick={() => setMobileOpen(false)}
           >
             <div className={styles.clubLogo}>
-              <div className={styles.logoIcon} aria-hidden="true">
-                FAC
+              <div className={styles.facLogoWrapper}>
+                <Image
+                  src={ASSETS.logos.fineArtsClub.src}
+                  alt={ASSETS.logos.fineArtsClub.alt}
+                  width={34}
+                  height={36}
+                  className={styles.facLogoImg}
+                  priority
+                />
               </div>
               <div className={styles.logoTextContainer}>
                 <span className={styles.clubTitle}>TechnoVIT</span>
@@ -37,8 +46,16 @@ export function Navbar() {
 
           <div className={styles.divider} aria-hidden="true" />
 
-          <div className={styles.vitBadge}>
-            {ASSETS.logos.vitChennai.fallbackText}
+          {/* VIT Chennai Official Brand Badge */}
+          <div className={styles.vitBrandWrapper} title={ASSETS.logos.vitChennai.alt}>
+            <Image
+              src={ASSETS.logos.vitChennai.src}
+              alt={ASSETS.logos.vitChennai.alt}
+              width={120}
+              height={34}
+              className={styles.vitLogoImg}
+              priority
+            />
           </div>
         </div>
 

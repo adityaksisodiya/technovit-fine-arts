@@ -9,14 +9,18 @@
 export interface AssetConfig {
   logos: {
     fineArtsClub: {
-      src: string | null;
+      src: string;
       alt: string;
       fallbackText: string;
+      width: number;
+      height: number;
     };
     vitChennai: {
-      src: string | null;
+      src: string;
       alt: string;
       fallbackText: string;
+      width: number;
+      height: number;
     };
   };
   map: {
@@ -30,18 +34,22 @@ export interface AssetConfig {
 export const ASSETS: AssetConfig = {
   logos: {
     fineArtsClub: {
-      src: null, // Set to '/assets/logos/fine-arts-club.svg' when available
+      src: "/assets/logos/fine-arts-club.jpg",
       alt: "Fine Arts Club — VIT Chennai",
       fallbackText: "FINE ARTS CLUB",
+      width: 88,
+      height: 92,
     },
     vitChennai: {
-      src: null, // Set to '/assets/logos/vit-chennai.svg' when available
+      src: "/assets/logos/vit-chennai.png",
       alt: "VIT Chennai Official Logo",
       fallbackText: "VIT CHENNAI",
+      width: 1024,
+      height: 292,
     },
   },
   map: {
-    src: null, // Set to '/assets/map/campus-map.jpg' when available
+    src: null, // Set to '/assets/map/campus-map.jpg' when real map is available
     alt: "TechnoVIT Campus & Photo Booth Map",
     width: 1400,
     height: 900,

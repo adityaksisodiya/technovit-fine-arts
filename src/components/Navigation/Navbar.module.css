@@ -30,6 +30,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  min-width: 0;
 }
 
 .facBrandLink {
@@ -40,10 +41,11 @@
   border-radius: var(--radius-sm);
   transition: opacity var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-spring);
   -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
 }
 
 .facBrandLink:hover {
-  opacity: 0.88;
+  opacity: 0.9;
   transform: translateY(-1px);
 }
 
@@ -58,18 +60,20 @@
   gap: var(--space-2);
 }
 
-.logoIcon {
+.facLogoWrapper {
   width: 32px;
   height: 32px;
-  border-radius: var(--radius-sm);
-  background: linear-gradient(135deg, var(--color-accent-primary) 0%, var(--color-accent-gold) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
-  font-weight: var(--weight-bold);
-  font-size: 13px;
-  box-shadow: 0 2px 8px rgba(226, 78, 43, 0.3);
+  flex-shrink: 0;
+}
+
+.facLogoImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 }
 
 .logoTextContainer {
@@ -97,20 +101,59 @@
 
 .divider {
   width: 1px;
-  height: 20px;
+  height: 22px;
   background-color: var(--color-border);
+  flex-shrink: 0;
 }
 
-.vitBadge {
-  font-family: var(--font-techno);
-  font-size: 10px;
-  font-weight: var(--weight-bold);
-  letter-spacing: var(--tracking-wide);
-  padding: 2px 6px;
-  background-color: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xs);
-  color: var(--color-text-secondary);
+.vitBrandWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.vitLogoImg {
+  height: 28px;
+  width: auto;
+  max-width: 130px;
+  object-fit: contain;
+  display: block;
+}
+
+@media (max-width: 480px) {
+  .brandGroup {
+    gap: var(--space-2);
+  }
+
+  .vitLogoImg {
+    height: 22px;
+    max-width: 95px;
+  }
+
+  .clubTitle {
+    font-size: 11.5px;
+  }
+
+  .clubSubtitle {
+    font-size: 8.5px;
+  }
+}
+
+@media (max-width: 360px) {
+  .vitLogoImg {
+    height: 19px;
+    max-width: 80px;
+  }
+
+  .facLogoWrapper {
+    width: 28px;
+    height: 28px;
+  }
+
+  .divider {
+    height: 18px;
+  }
 }
 
 /* Nav Links */
