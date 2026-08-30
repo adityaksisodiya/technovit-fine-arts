@@ -163,8 +163,8 @@ export interface Location {
   latitude: number | null;
   longitude: number | null;
   address: string | null;
-  map_x: number | null; // Normalized 0.0 - 1.0
-  map_y: number | null; // Normalized 0.0 - 1.0
+  map_x: number | null; // Normalized 0.0 - 1.0 (kept for backward compatibility)
+  map_y: number | null; // Normalized 0.0 - 1.0 (kept for backward compatibility)
   category: LocationCategory;
   is_active: boolean;
   created_at: string;
@@ -178,6 +178,7 @@ export interface LocationWithCount extends Location {
   approved_photo_count: number;
   total_photo_count: number;
   preview_photos?: PublicPhoto[];
+  is_demo_position?: boolean;
 }
 
 /**
@@ -187,9 +188,12 @@ export interface PublicLocation {
   id: string;
   name: string;
   description: string | null;
-  map_x: number; // 0.0 - 1.0
-  map_y: number; // 0.0 - 1.0
+  latitude: number;
+  longitude: number;
+  map_x?: number | null; // Optional backward compatibility
+  map_y?: number | null; // Optional backward compatibility
   category: LocationCategory;
   approved_photo_count: number;
   preview_photos: PublicPhoto[];
+  is_demo_position?: boolean;
 }

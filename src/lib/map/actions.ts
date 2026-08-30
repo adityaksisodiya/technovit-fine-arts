@@ -26,6 +26,8 @@ export async function createLocationAction(
     const name = (formData.get("name") as string)?.trim();
     const description = (formData.get("description") as string)?.trim() || null;
     const category = (formData.get("category") as LocationCategory) || "custom";
+    const latRaw = formData.get("latitude") as string;
+    const lngRaw = formData.get("longitude") as string;
     const mapXRaw = formData.get("map_x") as string;
     const mapYRaw = formData.get("map_y") as string;
     const isActive = formData.get("is_active") !== "false";
@@ -34,8 +36,10 @@ export async function createLocationAction(
       return { success: false, error: "Location name is required." };
     }
 
-    const map_x = mapXRaw ? Math.max(0, Math.min(1, parseFloat(mapXRaw))) : 0.5;
-    const map_y = mapYRaw ? Math.max(0, Math.min(1, parseFloat(mapYRaw))) : 0.5;
+    const latitude = latRaw ? Math.max(-90, Math.min(90, parseFloat(latRaw))) : null;
+    const longitude = lngRaw ? Math.max(-180, Math.min(180, parseFloat(lngRaw))) : null;
+    const map_x = mapXRaw ? Math.max(0, Math.min(1, parseFloat(mapXRaw))) : null;
+    const map_y = mapYRaw ? Math.max(0, Math.min(1, parseFloat(mapYRaw))) : null;
 
     const { data: newLoc, error } = await supabase
       .from("locations")
@@ -43,6 +47,8 @@ export async function createLocationAction(
         name,
         description,
         category,
+        latitude,
+        longitude,
         map_x,
         map_y,
         is_active: isActive,
@@ -64,7 +70,7 @@ export async function createLocationAction(
       entity_type: "location",
       entity_id: newLoc.id,
       action: "create_location",
-      details: { name, category, map_x, map_y },
+      details: { name, category, latitude, longitude },
     });
 
     revalidatePath("/admin/map");
@@ -93,21 +99,30 @@ export async function updateLocationAction(
     const name = (formData.get("name") as string)?.trim();
     const description = (formData.get("description") as string)?.trim() || null;
     const category = (formData.get("category") as LocationCategory) || "custom";
+    const latRaw = formData.get("latitude") as string;
+    const lngRaw = formData.get("longitude") as string;
     const isActive = formData.get("is_active") === "true";
 
     if (!id || !name) {
       return { success: false, error: "Location ID and name are required." };
     }
 
+    const updatePayload: Record<string, unknown> = {
+      name,
+      description,
+      category,
+      is_active: isActive,
+      updated_at: new Date().toISOString(),
+    };
+
+    if (latRaw && lngRaw) {
+      updatePayload.latitude = Math.max(-90, Math.min(90, parseFloat(latRaw)));
+      updatePayload.longitude = Math.max(-180, Math.min(180, parseFloat(lngRaw)));
+    }
+
     const { error } = await supabase
       .from("locations")
-      .update({
-        name,
-        description,
-        category,
-        is_active: isActive,
-        updated_at: new Date().toISOString(),
-      })
+      .update(updatePayload)
       .eq("id", id);
 
     if (error) {
@@ -121,7 +136,7 @@ export async function updateLocationAction(
       entity_type: "location",
       entity_id: id,
       action: "update_location",
-      details: { name, category, is_active: isActive },
+      details: { name, category, is_active: isActive, latitude: updatePayload.latitude, longitude: updatePayload.longitude },
     });
 
     revalidatePath("/admin/map");
@@ -136,25 +151,25 @@ export async function updateLocationAction(
 }
 
 /**
- * Repositions a marker on the map via normalized coordinates (Super Admin only).
+ * Repositions a marker on the geographic map (Super Admin only).
  */
 export async function updateLocationPositionAction(
   id: string,
-  map_x: number,
-  map_y: number
+  latitude: number,
+  longitude: number
 ): Promise<ActionState> {
   try {
     const admin = await requireAdmin(AdminRole.SUPER_ADMIN, "/admin/map");
     const supabase = createAdminClient();
 
-    const clampedX = Math.max(0, Math.min(1, map_x));
-    const clampedY = Math.max(0, Math.min(1, map_y));
+    const clampedLat = Math.max(-90, Math.min(90, latitude));
+    const clampedLng = Math.max(-180, Math.min(180, longitude));
 
     const { error } = await supabase
       .from("locations")
       .update({
-        map_x: clampedX,
-        map_y: clampedY,
+        latitude: clampedLat,
+        longitude: clampedLng,
         updated_at: new Date().toISOString(),
       })
       .eq("id", id);
@@ -170,7 +185,7 @@ export async function updateLocationPositionAction(
       entity_type: "location",
       entity_id: id,
       action: "reposition_location",
-      details: { map_x: clampedX, map_y: clampedY },
+      details: { latitude: clampedLat, longitude: clampedLng },
     });
 
     revalidatePath("/admin/map");
@@ -182,6 +197,7 @@ export async function updateLocationPositionAction(
     return { success: false, error: message };
   }
 }
+
 
 /**
  * Toggles a location active/disabled status (Super Admin only).

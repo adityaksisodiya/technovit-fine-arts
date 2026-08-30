@@ -72,12 +72,12 @@
   box-shadow: 0 0 12px rgba(226, 78, 43, 0.4);
 }
 
-/* Map Blueprint Canvas */
+/* Map Canvas Wrapper */
 .canvasWrapper {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 10;
-  min-height: 380px;
+  min-height: 420px;
   background-color: #12100E;
   border-radius: var(--radius-lg);
   overflow: hidden;
@@ -87,136 +87,218 @@
 
 @media (min-width: 768px) {
   .canvasWrapper {
-    min-height: 520px;
+    min-height: 560px;
     border-radius: var(--radius-xl);
   }
 }
 
-/* Blueprint Grid Background */
-.canvasBlueprint {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px;
-  background-position: -1px -1px;
+.maplibreCanvas {
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute !important;
+  inset: 0 !important;
 }
 
-/* Compass / Technical Marks */
-.compassMark {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  color: rgba(255, 255, 255, 0.4);
-  letter-spacing: var(--tracking-widest);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 3px 8px;
-  border-radius: var(--radius-xs);
-  pointer-events: none;
-}
 
-.mapPlaceholderArt {
+/* Map Loading Skeleton */
+.mapLoadingOverlay {
   position: absolute;
   inset: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  gap: var(--space-2);
-  color: rgba(255, 255, 255, 0.22);
+  gap: var(--space-3);
+  background-color: #12100E;
+  z-index: 5;
+  color: var(--color-text-secondary);
   font-family: var(--font-techno);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wider);
   text-transform: uppercase;
-  letter-spacing: var(--tracking-widest);
-  font-size: 11px;
-  pointer-events: none;
 }
 
-/* Location Marker Pins */
-.markerPin {
+.mapLoadingSpinner {
+  width: 32px;
+  height: 32px;
+  border: 2px solid rgba(226, 78, 43, 0.2);
+  border-top-color: var(--color-accent-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Recenter Button */
+.recenterControl {
   position: absolute;
-  transform: translate(-50%, -50%);
-  background: transparent;
-  border: none;
-  cursor: pointer;
+  top: 14px;
+  left: 14px;
   z-index: 10;
-  display: flex;
-  flex-direction: column;
+  display: inline-flex;
   align-items: center;
-  gap: 3px;
-  transition: transform var(--duration-fast) var(--ease-spring);
+  gap: 6px;
+  background-color: rgba(18, 16, 14, 0.88);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-techno);
+  font-size: 11px;
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transition: all var(--duration-fast) var(--ease-out);
   -webkit-tap-highlight-color: transparent;
 }
 
-.markerPin:hover,
-.markerPinActive {
-  transform: translate(-50%, -50%) scale(1.2);
-  z-index: 25;
+.recenterControl:hover {
+  background-color: var(--color-accent-primary);
+  border-color: var(--color-accent-primary);
+  transform: translateY(-1px);
 }
 
-.markerBeacon {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
+/* Technical Compass & Campus Tag */
+.compassMark {
+  position: absolute;
+  top: 14px;
+  right: 52px; /* Leaves clear space for MapLibre top-right zoom controls */
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: var(--tracking-widest);
+  background-color: rgba(18, 16, 14, 0.8);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 4px 10px;
+  border-radius: var(--radius-xs);
+  pointer-events: none;
+  z-index: 10;
+}
+
+@media (max-width: 480px) {
+  .compassMark {
+    display: none;
+  }
+}
+
+/* Custom Pulsing Location Marker (NO permanent text labels) */
+.customMarkerPin {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: var(--weight-bold);
-  box-shadow: 0 0 14px currentColor;
+  transform: translate(-50%, -50%);
+  transition: transform var(--duration-fast) var(--ease-spring);
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+.customMarkerPin:hover,
+.customMarkerPin:focus-visible {
+  transform: translate(-50%, -50%) scale(1.25);
+  z-index: 30 !important;
+}
+
+.markerBeacon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #FF7043 0%, #E24E2B 65%, #C23818 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 14px rgba(226, 78, 43, 0.75), 0 2px 6px rgba(0, 0, 0, 0.4);
+  transition: transform var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.markerCoreDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  box-shadow: 0 0 4px #ffffff;
 }
 
 .markerBeacon::after {
   content: "";
   position: absolute;
-  inset: -4px;
+  inset: -6px;
   border-radius: 50%;
-  border: 2px solid currentColor;
-  opacity: 0.6;
-  animation: pulseBeacon 2.2s infinite ease-out;
+  border: 2px solid var(--color-accent-primary);
+  opacity: 0.7;
+  animation: pulseBeacon 2.2s infinite cubic-bezier(0.2, 0, 0, 1);
+  pointer-events: none;
+}
+
+.markerSelected .markerBeacon {
+  transform: scale(1.15);
+  box-shadow: 0 0 24px rgba(226, 78, 43, 0.95), 0 0 10px #ffffff;
+  border-color: #ffffff;
+}
+
+.markerSelected .markerBeacon::after {
+  animation: pulseBeaconActive 1.3s infinite cubic-bezier(0.2, 0, 0, 1);
 }
 
 @keyframes pulseBeacon {
-  0% { transform: scale(0.9); opacity: 0.8; }
-  100% { transform: scale(1.8); opacity: 0; }
+  0% {
+    transform: scale(0.85);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
 }
 
-.markerLabel {
-  background-color: rgba(18, 16, 14, 0.9);
-  backdrop-filter: blur(4px);
-  color: #ffffff;
-  font-family: var(--font-techno);
-  font-size: 9.5px;
-  font-weight: var(--weight-semibold);
-  padding: 1.5px 6px;
-  border-radius: var(--radius-full);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  white-space: nowrap;
+@keyframes pulseBeaconActive {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.95;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
 }
 
-/* Location Detail Card */
+
+/* Location Detail Card (Floating Popover) */
 .locationCard {
   position: absolute;
-  bottom: 12px;
-  left: 12px;
-  max-width: 380px;
-  width: calc(100% - 24px);
+  bottom: 16px;
+  left: 16px;
+  max-width: 390px;
+  width: calc(100% - 32px);
   background-color: var(--color-bg-elevated);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: var(--space-4);
-  box-shadow: var(--shadow-elevated);
-  z-index: 30;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  z-index: 25;
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
   animation: slideUp var(--duration-fast) var(--ease-out);
+  backdrop-filter: blur(12px);
+}
+
+@media (max-width: 480px) {
+  .locationCard {
+    bottom: 10px;
+    left: 10px;
+    width: calc(100% - 20px);
+    padding: var(--space-3);
+  }
 }
 
 .locationCardHeader {
@@ -233,6 +315,20 @@
   letter-spacing: var(--tracking-wider);
   text-transform: uppercase;
   font-weight: var(--weight-bold);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.demoTag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--color-warning);
+  background-color: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  padding: 1px 5px;
+  border-radius: var(--radius-xs);
+  text-transform: uppercase;
 }
 
 .locationCardTitle {
@@ -280,6 +376,7 @@
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
 
 /* -------------------------------------------------------
    Location Gallery Modal & Lightbox Integration

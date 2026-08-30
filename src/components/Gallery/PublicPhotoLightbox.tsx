@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback, useState, useRef } from "react";
 import type { PublicPhoto } from "@/lib/gallery";
 import { BlurhashCanvas } from "./BlurhashCanvas";
 import styles from "./Gallery.module.css";
@@ -24,6 +24,7 @@ export function PublicPhotoLightbox({
 }: PublicPhotoLightboxProps) {
   const [loadedPhotoId, setLoadedPhotoId] = useState<string | null>(null);
   const imageLoaded = photo ? loadedPhotoId === photo.id : false;
+  const imgRef = useRef<HTMLImageElement | null>(null);
 
   const currentIndex = photo
     ? photos.findIndex((p) => p.id === photo.id)
@@ -42,6 +43,28 @@ export function PublicPhotoLightbox({
       onSelectPhoto(photos[currentIndex + 1]);
     }
   }, [hasNext, photos, currentIndex, onSelectPhoto]);
+
+  useEffect(() => {
+    if (!photo) return;
+    const img = imgRef.current;
+    if (!img) return;
+
+    if (img.complete && img.naturalWidth > 0) {
+      setLoadedPhotoId(photo.id);
+      return;
+    }
+
+    if (typeof img.decode === "function") {
+      img
+        .decode()
+        .then(() => setLoadedPhotoId(photo.id))
+        .catch(() => {
+          if (img.complete && img.naturalWidth > 0) {
+            setLoadedPhotoId(photo.id);
+          }
+        });
+    }
+  }, [photo]);
 
   // Handle keyboard shortcuts
   useEffect(() => {
@@ -129,19 +152,31 @@ export function PublicPhotoLightbox({
 
         {/* High-Resolution Image Container with Blurhash placeholder */}
         <div className={styles.lightboxImageWrapper}>
-          {!imageLoaded && photo.blurhash && (
-            <div className={styles.lightboxBlurhash}>
+          {photo.blurhash && (
+            <div
+              className={styles.lightboxBlurhash}
+              style={{
+                opacity: imageLoaded ? 0 : 1,
+                visibility: imageLoaded ? "hidden" : "visible",
+                pointerEvents: "none",
+                transition: "opacity 0.35s ease-out, visibility 0.35s ease-out",
+              }}
+              aria-hidden="true"
+            >
               <BlurhashCanvas blurhash={photo.blurhash} width={64} height={64} />
             </div>
           )}
 
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
+            ref={imgRef}
             src={photo.displayUrl}
             alt="TechnoVIT Festival Photograph"
             className={`${styles.lightboxImage} ${imageLoaded ? styles.lightboxImageVisible : ""}`}
             onLoad={() => setLoadedPhotoId(photo.id)}
+            onError={() => setLoadedPhotoId(photo.id)}
           />
+
 
           {/* Previous Button */}
           {hasPrev && (

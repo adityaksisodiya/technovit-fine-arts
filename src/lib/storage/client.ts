@@ -14,6 +14,7 @@ const globalForB2 = globalThis as unknown as {
  *
  * This client runs strictly on the server.
  * Uses Backblaze B2 Application Key credentials and S3-compatible endpoint.
+ * Full standard TLS/HTTPS security is enforced.
  */
 export function getB2Client(): S3Client {
   if (globalForB2.b2Client) {
@@ -45,3 +46,4 @@ export function getB2BucketName(): string {
   const config = getB2Config();
   return config.bucketName;
 }
+

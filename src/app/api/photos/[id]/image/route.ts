@@ -75,7 +75,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     );
   }
 
-  // 2. Fetch image buffer from Backblaze B2 (Server-to-Server)
+  // 2. Fetch real image buffer from Backblaze B2 (Server-to-Server)
   try {
     const imageBuffer = await downloadStorageObject(storageKey);
 
@@ -97,3 +97,5 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     );
   }
 }
+
+

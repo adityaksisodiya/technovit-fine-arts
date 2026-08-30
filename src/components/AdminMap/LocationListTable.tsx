@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { LOCATION_CATEGORY_META } from "@/lib/map/constants";
 import { toggleLocationStatusAction, deleteLocationAction } from "@/lib/map/actions";
 import type { LocationWithCount } from "@/types";
 import styles from "./AdminMap.module.css";
@@ -53,9 +52,8 @@ export function LocationListTable({
       <table className={styles.table}>
         <thead>
           <tr>
-            <th className={styles.th}>Name</th>
-            <th className={styles.th}>Category</th>
-            <th className={styles.th}>Position (X, Y)</th>
+            <th className={styles.th}>Title</th>
+            <th className={styles.th}>Coordinates (Lat, Lng)</th>
             <th className={styles.th}>Photos</th>
             <th className={styles.th}>Status</th>
             <th className={styles.th} style={{ textAlign: "right" }}>
@@ -65,7 +63,6 @@ export function LocationListTable({
         </thead>
         <tbody>
           {locations.map((loc) => {
-            const meta = LOCATION_CATEGORY_META[loc.category] || LOCATION_CATEGORY_META.custom;
             const isBusy = busyId === loc.id;
 
             return (
@@ -81,27 +78,24 @@ export function LocationListTable({
                   </div>
                 </td>
 
-                <td className={styles.td}>
-                  <span
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "4px",
-                      padding: "2px 8px",
-                      borderRadius: "var(--radius-full)",
-                      fontSize: "11px",
-                      fontWeight: "bold",
-                      backgroundColor: meta.bgLight,
-                      color: meta.color,
-                      border: `1px solid ${meta.color}`,
-                    }}
-                  >
-                    {meta.icon} {meta.label}
-                  </span>
-                </td>
 
                 <td className={styles.td} style={{ fontFamily: "var(--font-mono)", fontSize: "11px" }}>
-                  {loc.map_x?.toFixed(3)}, {loc.map_y?.toFixed(3)}
+                  <div>
+                    {typeof loc.latitude === "number" ? loc.latitude.toFixed(5) : "—"}° N,{" "}
+                    {typeof loc.longitude === "number" ? loc.longitude.toFixed(5) : "—"}° E
+                  </div>
+                  {loc.is_demo_position && (
+                    <span
+                      style={{
+                        display: "inline-block",
+                        fontSize: "9px",
+                        color: "var(--color-warning)",
+                        marginTop: "2px",
+                      }}
+                    >
+                      (Demo placement)
+                    </span>
+                  )}
                 </td>
 
                 <td className={styles.td}>

@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { LOCATION_CATEGORY_META } from "@/lib/map/constants";
+import { VIT_CHENNAI_COORDINATES } from "@/lib/map/constants";
 import { createLocationAction, updateLocationAction } from "@/lib/map/actions";
 import type { Location, LocationCategory, LocationWithCount } from "@/types";
 import styles from "./AdminMap.module.css";
 
 interface LocationFormModalProps {
   initialLocation: Location | LocationWithCount | null;
-  initialCoords?: { x: number; y: number } | null;
+  initialCoords?: { latitude: number; longitude: number } | null;
   onClose: () => void;
   onSuccess: () => void;
 }
@@ -23,14 +23,13 @@ export function LocationFormModal({
 
   const [name, setName] = useState<string>(initialLocation?.name || "");
   const [description, setDescription] = useState<string>(initialLocation?.description || "");
-  const [category, setCategory] = useState<LocationCategory>(
-    initialLocation?.category || "custom"
+  const category: LocationCategory = initialLocation?.category || "custom";
+  const [latitude, setLatitude] = useState<number>(
+    initialLocation?.latitude ?? initialCoords?.latitude ?? VIT_CHENNAI_COORDINATES.latitude
   );
-  const [mapX, setMapX] = useState<number>(
-    initialLocation?.map_x ?? initialCoords?.x ?? 0.5
-  );
-  const [mapY, setMapY] = useState<number>(
-    initialLocation?.map_y ?? initialCoords?.y ?? 0.5
+
+  const [longitude, setLongitude] = useState<number>(
+    initialLocation?.longitude ?? initialCoords?.longitude ?? VIT_CHENNAI_COORDINATES.longitude
   );
   const [isActive, setIsActive] = useState<boolean>(
     initialLocation ? initialLocation.is_active : true
@@ -51,8 +50,8 @@ export function LocationFormModal({
     formData.append("name", name.trim());
     formData.append("description", description.trim());
     formData.append("category", category);
-    formData.append("map_x", mapX.toString());
-    formData.append("map_y", mapY.toString());
+    formData.append("latitude", latitude.toString());
+    formData.append("longitude", longitude.toString());
     formData.append("is_active", isActive ? "true" : "false");
 
     try {
@@ -90,7 +89,7 @@ export function LocationFormModal({
 
           <div className={styles.formGroup}>
             <label className={styles.formLabel} htmlFor="loc-name">
-              Location Name *
+              Location Title *
             </label>
             <input
               id="loc-name"
@@ -104,26 +103,8 @@ export function LocationFormModal({
           </div>
 
           <div className={styles.formGroup}>
-            <label className={styles.formLabel} htmlFor="loc-category">
-              Category
-            </label>
-            <select
-              id="loc-category"
-              className="select"
-              value={category}
-              onChange={(e) => setCategory(e.target.value as LocationCategory)}
-            >
-              {Object.entries(LOCATION_CATEGORY_META).map(([key, meta]) => (
-                <option key={key} value={key}>
-                  {meta.icon} {meta.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className={styles.formGroup}>
             <label className={styles.formLabel} htmlFor="loc-desc">
-              Description (Optional)
+              Details (Optional)
             </label>
             <textarea
               id="loc-desc"
@@ -135,35 +116,36 @@ export function LocationFormModal({
             />
           </div>
 
+
           <div style={{ display: "flex", gap: "var(--space-3)" }}>
             <div className={styles.formGroup} style={{ flex: 1 }}>
-              <label className={styles.formLabel} htmlFor="loc-map-x">
-                Canvas X (0.0 - 1.0)
+              <label className={styles.formLabel} htmlFor="loc-lat">
+                Latitude (° N)
               </label>
               <input
-                id="loc-map-x"
+                id="loc-lat"
                 type="number"
-                step="0.001"
-                min="0"
-                max="1"
+                step="0.000001"
+                min="-90"
+                max="90"
                 className="input"
-                value={mapX}
-                onChange={(e) => setMapX(parseFloat(e.target.value) || 0)}
+                value={latitude}
+                onChange={(e) => setLatitude(parseFloat(e.target.value) || 0)}
               />
             </div>
             <div className={styles.formGroup} style={{ flex: 1 }}>
-              <label className={styles.formLabel} htmlFor="loc-map-y">
-                Canvas Y (0.0 - 1.0)
+              <label className={styles.formLabel} htmlFor="loc-lng">
+                Longitude (° E)
               </label>
               <input
-                id="loc-map-y"
+                id="loc-lng"
                 type="number"
-                step="0.001"
-                min="0"
-                max="1"
+                step="0.000001"
+                min="-180"
+                max="180"
                 className="input"
-                value={mapY}
-                onChange={(e) => setMapY(parseFloat(e.target.value) || 0)}
+                value={longitude}
+                onChange={(e) => setLongitude(parseFloat(e.target.value) || 0)}
               />
             </div>
           </div>
@@ -193,3 +175,4 @@ export function LocationFormModal({
     </div>
   );
 }
+

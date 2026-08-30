@@ -187,33 +187,6 @@
   }
 }
 
-/* Feature Spotlight Photo */
-.cardFeatured {
-  border: 1.5px solid var(--color-border-strong);
-  box-shadow: var(--shadow-photo-hover);
-}
-
-.cardFeatured::after {
-  content: "★ FEATURED";
-  position: absolute;
-  top: 4px;
-  right: 6px;
-  font-family: var(--font-mono);
-  font-size: 7px;
-  font-weight: var(--weight-bold);
-  letter-spacing: var(--tracking-wider);
-  color: var(--color-accent-primary);
-  opacity: 0.85;
-}
-
-@media (min-width: 768px) {
-  .cardFeatured::after {
-    top: 6px;
-    right: 10px;
-    font-size: 7.5px;
-  }
-}
-
 /* Desktop Hover */
 @media (hover: hover) {
   .photoCard:hover {
@@ -260,6 +233,7 @@
   height: 100%;
   overflow: hidden;
   z-index: 1;
+  pointer-events: none;
 }
 
 .canvasBlurhash {
@@ -270,12 +244,40 @@
 
 .imageElement {
   position: relative;
+  z-index: 2;
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
   object-fit: cover;
-  transition: transform var(--duration-slow) var(--ease-out), opacity var(--duration-slow) var(--ease-out);
+  transition: transform var(--duration-slow) var(--ease-out), opacity 0.35s ease-out;
 }
+
+.cardErrorFallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-tertiary);
+  font-family: var(--font-techno);
+  font-size: 10px;
+  letter-spacing: var(--tracking-wide);
+  z-index: 2;
+}
+
+.errorIcon {
+  font-size: 16px;
+  opacity: 0.6;
+}
+
+.errorText {
+  opacity: 0.75;
+}
+
+
 
 /* Card Caption / Meta Bar */
 .cardMeta {

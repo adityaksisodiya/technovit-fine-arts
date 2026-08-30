@@ -66,12 +66,13 @@ export function LocationPhotoGalleryModal({
         <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
           <div className={styles.modalHeader}>
             <div>
-              <span className={styles.zoneTag}>{location.category.replace("_", " ")}</span>
+              <span className={styles.zoneTag}>Campus Space</span>
               <h2 className={styles.modalTitle}>{location.name}</h2>
               <span className={styles.modalSubtitle}>
                 {photos.length} Approved Festival {photos.length === 1 ? "Photograph" : "Photographs"}
               </span>
             </div>
+
             <button type="button" className="btn btn--ghost" onClick={onClose} aria-label="Close">
               ✕
             </button>

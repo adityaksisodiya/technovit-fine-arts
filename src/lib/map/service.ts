@@ -1,7 +1,43 @@
 import { createAdminClient } from "@/lib/supabase/server";
+import { VIT_CHENNAI_COORDINATES } from "./constants";
 import type { Location, LocationCategory, LocationWithCount, PublicLocation, PublicPhoto } from "@/types";
 
-export { LOCATION_CATEGORY_META } from "./constants";
+export { LOCATION_CATEGORY_META, OPENFREEMAP_STYLES, VIT_CHENNAI_CENTER, VIT_CHENNAI_COORDINATES, MAP_ZOOM_CONFIG, MAP_ATTRIBUTION } from "./constants";
+
+/**
+ * Resolves coordinates for a location record.
+ * Uses stored latitude/longitude if present. If missing, applies a deterministic
+ * demo placement relative to VIT Chennai campus and explicitly flags it as demo data.
+ */
+function resolveLocationCoordinates(loc: {
+  latitude?: number | null;
+  longitude?: number | null;
+  map_x?: number | null;
+  map_y?: number | null;
+}): { latitude: number; longitude: number; is_demo_position: boolean } {
+  if (
+    typeof loc.latitude === "number" &&
+    !isNaN(loc.latitude) &&
+    typeof loc.longitude === "number" &&
+    !isNaN(loc.longitude)
+  ) {
+    return {
+      latitude: loc.latitude,
+      longitude: loc.longitude,
+      is_demo_position: false,
+    };
+  }
+
+  // Fallback / legacy demo projection: map normalized [0, 1] offset around VIT Chennai
+  const offsetX = typeof loc.map_x === "number" ? (loc.map_x - 0.5) * 0.003 : 0;
+  const offsetY = typeof loc.map_y === "number" ? (0.5 - loc.map_y) * 0.003 : 0;
+
+  return {
+    latitude: Math.round((VIT_CHENNAI_COORDINATES.latitude + offsetY) * 1000000) / 1000000,
+    longitude: Math.round((VIT_CHENNAI_COORDINATES.longitude + offsetX) * 1000000) / 1000000,
+    is_demo_position: true,
+  };
+}
 
 /**
  * Fetches active locations for the public interactive map.
@@ -10,13 +46,11 @@ export { LOCATION_CATEGORY_META } from "./constants";
 export async function getPublicLocations(): Promise<PublicLocation[]> {
   const supabase = createAdminClient();
 
-  // 1. Fetch active locations with coordinates
+  // 1. Fetch active locations
   const { data: locations, error: locError } = await supabase
     .from("locations")
-    .select("id, name, description, map_x, map_y, category, is_active")
+    .select("id, name, description, latitude, longitude, map_x, map_y, category, is_active")
     .eq("is_active", true)
-    .not("map_x", "is", null)
-    .not("map_y", "is", null)
     .order("name", { ascending: true });
 
   if (locError) {
@@ -66,15 +100,20 @@ export async function getPublicLocations(): Promise<PublicLocation[]> {
   // 4. Map into PublicLocation DTOs
   return locations.map((loc) => {
     const locPhotos = photosByLocation[loc.id] || [];
+    const coords = resolveLocationCoordinates(loc);
+
     return {
       id: loc.id,
       name: loc.name,
       description: loc.description,
-      map_x: loc.map_x ?? 0.5,
-      map_y: loc.map_y ?? 0.5,
+      latitude: coords.latitude,
+      longitude: coords.longitude,
+      map_x: loc.map_x ?? null,
+      map_y: loc.map_y ?? null,
       category: (loc.category as LocationCategory) || "custom",
       approved_photo_count: locPhotos.length,
       preview_photos: locPhotos.slice(0, 4),
+      is_demo_position: coords.is_demo_position,
     };
   });
 }
@@ -91,7 +130,7 @@ export async function getPublicLocationPhotos(
   // 1. Fetch location details
   const { data: loc, error: locError } = await supabase
     .from("locations")
-    .select("id, name, description, map_x, map_y, category, is_active")
+    .select("id, name, description, latitude, longitude, map_x, map_y, category, is_active")
     .eq("id", locationId)
     .eq("is_active", true)
     .single();
@@ -128,15 +167,20 @@ export async function getPublicLocationPhotos(
     };
   });
 
+  const coords = resolveLocationCoordinates(loc);
+
   const publicLocation: PublicLocation = {
     id: loc.id,
     name: loc.name,
     description: loc.description,
-    map_x: loc.map_x ?? 0.5,
-    map_y: loc.map_y ?? 0.5,
+    latitude: coords.latitude,
+    longitude: coords.longitude,
+    map_x: loc.map_x ?? null,
+    map_y: loc.map_y ?? null,
     category: (loc.category as LocationCategory) || "custom",
     approved_photo_count: photos.length,
     preview_photos: photos.slice(0, 4),
+    is_demo_position: coords.is_demo_position,
   };
 
   return { location: publicLocation, photos };
@@ -185,10 +229,17 @@ export async function getAdminLocations(): Promise<LocationWithCount[]> {
     }
   }
 
-  return locations.map((loc) => ({
-    ...(loc as Location),
-    category: (loc.category as LocationCategory) || "custom",
-    approved_photo_count: counts[loc.id]?.approved || 0,
-    total_photo_count: counts[loc.id]?.total || 0,
-  }));
+  return locations.map((loc) => {
+    const coords = resolveLocationCoordinates(loc);
+    return {
+      ...(loc as Location),
+      latitude: loc.latitude ?? coords.latitude,
+      longitude: loc.longitude ?? coords.longitude,
+      category: (loc.category as LocationCategory) || "custom",
+      approved_photo_count: counts[loc.id]?.approved || 0,
+      total_photo_count: counts[loc.id]?.total || 0,
+      is_demo_position: coords.is_demo_position,
+    };
+  });
 }
+

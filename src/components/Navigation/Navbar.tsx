@@ -32,7 +32,7 @@ export function Navbar() {
                   src={ASSETS.logos.fineArtsClub.src}
                   alt={ASSETS.logos.fineArtsClub.alt}
                   width={34}
-                  height={36}
+                  height={34}
                   className={styles.facLogoImg}
                   priority
                 />

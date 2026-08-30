@@ -34,11 +34,11 @@ export interface AssetConfig {
 export const ASSETS: AssetConfig = {
   logos: {
     fineArtsClub: {
-      src: "/assets/logos/fine-arts-club.jpg",
+      src: "/assets/logos/fine-arts-club.png",
       alt: "Fine Arts Club — VIT Chennai",
       fallbackText: "FINE ARTS CLUB",
-      width: 88,
-      height: 92,
+      width: 512,
+      height: 512,
     },
     vitChennai: {
       src: "/assets/logos/vit-chennai.png",

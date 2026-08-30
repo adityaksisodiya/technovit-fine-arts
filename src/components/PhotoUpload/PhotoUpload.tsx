@@ -177,8 +177,7 @@ export function PhotoUpload({ boothId, onUploadSuccess }: PhotoUploadProps) {
       <div aria-live="polite" aria-atomic="true" className="sr-only">
         {stage === "compressing" && "Optimizing photo for mobile transmission..."}
         {stage === "uploading" && "Uploading photo to gallery servers..."}
-        {stage === "success" &&
-          "Photo successfully submitted. Awaiting moderator review."}
+        {stage === "success" && "Photo successfully submitted."}
         {stage === "error" && errorMessage}
       </div>
 
@@ -247,11 +246,11 @@ export function PhotoUpload({ boothId, onUploadSuccess }: PhotoUploadProps) {
               ? "Preparing Photo..."
               : "Uploading to Gallery..."}
           </p>
-          <p className={styles.processingDetail}>
-            {stage === "compressing"
-              ? "Compressing in browser for fast mobile upload"
-              : "Sending encrypted payload to server"}
-          </p>
+          {stage === "compressing" && (
+            <p className={styles.processingDetail}>
+              Compressing in browser for fast mobile upload
+            </p>
+          )}
         </div>
       )}
 
@@ -271,7 +270,7 @@ export function PhotoUpload({ boothId, onUploadSuccess }: PhotoUploadProps) {
                 d="M5 13l4 4L19 7"
               />
             </svg>
-            <span>Pending Review</span>
+            <span>Photo Submitted</span>
           </div>
 
           {previewUrl && (
@@ -289,9 +288,7 @@ export function PhotoUpload({ boothId, onUploadSuccess }: PhotoUploadProps) {
 
           <h3 className={styles.successHeading}>Photo Received!</h3>
           <p className={styles.successMessage}>
-            Thank you for contributing to TechnoVIT. Your photo has been
-            submitted and will appear in the public gallery once approved by a
-            moderator.
+            Photo successfully submitted.
           </p>
 
           <button

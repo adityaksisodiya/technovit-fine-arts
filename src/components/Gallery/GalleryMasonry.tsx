@@ -80,7 +80,7 @@ export function GalleryMasonry({
           </span>
           <h3 className={styles.emptyTitle}>The canvas is fresh</h3>
           <p className={styles.emptyDesc}>
-            Be the first to share a festival memory! Upload your photo above to have it featured in the official gallery.
+            Be the first to share a festival memory! Upload your photo above to have it displayed in the official gallery.
           </p>
         </div>
       ) : (
