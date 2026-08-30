@@ -43,8 +43,7 @@ export function MapPromoPopup() {
         </p>
         <Link
           href="/map"
-          className="btn btn--primary"
-          style={{ fontSize: "11px", padding: "4px 10px", marginTop: "6px", alignSelf: "flex-start" }}
+          className={`btn btn--primary ${styles.promoButton}`}
           onClick={handleDismiss}
         >
           Explore Campus Map ↗

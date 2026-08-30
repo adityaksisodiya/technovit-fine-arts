@@ -415,3 +415,166 @@
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* ============================================================
+   Map Promo Popup (Mobile-First Layout with Stable Top-Right Close)
+   ============================================================ */
+
+.promoPopup {
+  position: fixed;
+  bottom: max(16px, env(safe-area-inset-bottom, 16px));
+  left: 12px;
+  right: 12px;
+  width: auto;
+  max-width: calc(100vw - 24px);
+  margin: 0 auto;
+  z-index: 90;
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-elevated);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  animation: slideUpPopup var(--duration-normal) var(--ease-spring);
+}
+
+.promoIcon {
+  font-size: 1.5rem;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
+  user-select: none;
+}
+
+.promoContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+  padding-right: 28px; /* Reserves clear clearance for the 44px top-right close control */
+}
+
+.promoTitle {
+  font-family: var(--font-techno);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-primary);
+  line-height: 1.3;
+}
+
+.promoText {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  line-height: 1.45;
+  margin-bottom: 2px;
+}
+
+.promoButton {
+  font-size: 11px;
+  padding: 5px 12px;
+  margin-top: 4px;
+  align-self: flex-start;
+  min-height: 30px;
+  line-height: 1;
+}
+
+/* Mobile Close Button: Stable top-right position with 44px touch target */
+.promoClose {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-full);
+  color: var(--color-text-tertiary);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: color var(--duration-fast) var(--ease-out), background-color var(--duration-fast) var(--ease-out);
+}
+
+.promoClose:hover,
+.promoClose:focus-visible {
+  color: var(--color-text-primary);
+  background-color: rgba(23, 20, 18, 0.06);
+}
+
+.promoClose:active {
+  transform: scale(0.92);
+}
+
+@keyframes slideUpPopup {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Desktop layout (>= 640px): Standard bottom-right toast */
+@media (min-width: 640px) {
+  .promoPopup {
+    bottom: 20px;
+    right: 20px;
+    left: auto;
+    width: calc(100% - 40px);
+    max-width: 360px;
+    margin: 0;
+    padding: var(--space-3) var(--space-4);
+    animation: slideInRightPopup var(--duration-normal) var(--ease-spring);
+  }
+
+  .promoContent {
+    padding-right: 0;
+  }
+
+  .promoClose {
+    position: static;
+    width: auto;
+    height: auto;
+    min-width: 0;
+    min-height: 0;
+    padding: 4px;
+    font-size: var(--text-sm);
+    color: var(--color-text-tertiary);
+    align-self: flex-start;
+    border-radius: var(--radius-xs);
+  }
+
+  .promoClose:hover,
+  .promoClose:focus-visible {
+    color: var(--color-text-primary);
+    background-color: transparent;
+  }
+
+  .promoClose:active {
+    transform: none;
+  }
+}
+
+@keyframes slideInRightPopup {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
