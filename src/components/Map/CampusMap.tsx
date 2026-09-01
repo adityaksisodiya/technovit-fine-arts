@@ -224,7 +224,7 @@ export function CampusMap({ initialLocations = [] }: CampusMapProps) {
         <span className="technical-tag">Campus Spaces • VIT Chennai</span>
         <h1 className={styles.mapTitle}>Explore the Campus</h1>
         <p className={styles.mapSubtitle}>
-          Interactive festival map powered by MapLibre &amp; OpenFreeMap. Discover festival locations and photo memories across VIT Chennai.
+          Discover festival locations and photo memories across VIT Chennai.
         </p>
       </header>
 
