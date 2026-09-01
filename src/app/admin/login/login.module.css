@@ -79,15 +79,15 @@
 }
 
 .alertError {
-  background-color: #FDF2F2;
-  border: 1px solid #F8D7DA;
+  background-color: rgba(231, 76, 60, 0.12);
+  border: 1px solid rgba(231, 76, 60, 0.3);
   color: var(--color-error);
 }
 
 .alertInfo {
-  background-color: #F0F4F8;
-  border: 1px solid #D4DDEB;
-  color: var(--color-accent-secondary);
+  background-color: rgba(90, 143, 212, 0.12);
+  border: 1px solid rgba(90, 143, 212, 0.3);
+  color: var(--color-accent-electric);
 }
 
 /* -------------------------------------------------------

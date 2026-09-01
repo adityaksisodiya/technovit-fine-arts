@@ -18,7 +18,7 @@ export function EditorialHero() {
       <div className={styles.heroFloatingCardRight} aria-hidden="true">
         <div
           className={styles.heroThumbPlaceholder}
-          style={{ background: "linear-gradient(135deg, rgba(226, 78, 43, 0.15), rgba(245, 158, 11, 0.15))" }}
+          style={{ background: "linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(233, 215, 161, 0.15))" }}
         >
           <div className={styles.heroThumbPin} />
           🎨

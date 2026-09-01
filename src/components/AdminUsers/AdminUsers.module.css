@@ -55,15 +55,15 @@
 }
 
 .roleSuperAdmin {
-  background-color: rgba(196, 85, 58, 0.2);
+  background-color: rgba(212, 175, 55, 0.2);
   color: var(--color-accent-primary);
   border: 1px solid var(--color-accent-primary);
 }
 
 .roleAdmin {
-  background-color: rgba(43, 90, 142, 0.2);
-  color: #5c9be6;
-  border: 1px solid #5c9be6;
+  background-color: rgba(90, 143, 212, 0.2);
+  color: #7EB5E8;
+  border: 1px solid #7EB5E8;
 }
 
 .roleModerator {
@@ -76,7 +76,7 @@
 .modalBackdrop {
   position: fixed;
   inset: 0;
-  background-color: rgba(10, 8, 7, 0.85);
+  background-color: rgba(13, 27, 42, 0.85);
   backdrop-filter: blur(4px);
   z-index: 1000;
   display: flex;

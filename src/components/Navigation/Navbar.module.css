@@ -200,12 +200,12 @@
   background-color: var(--color-text-primary);
   color: var(--color-text-inverse);
   padding: var(--space-2) var(--space-5);
-  box-shadow: 0 2px 10px rgba(23, 20, 18, 0.15);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .navLinkSpecial:hover {
   background-color: var(--color-accent-primary);
-  color: #ffffff;
+  color: #0D1B2A;
   transform: translateY(-1px);
 }
 

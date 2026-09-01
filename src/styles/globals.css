@@ -81,41 +81,41 @@ ol {
    ------------------------------------------------------- */
 :root {
   /* === Canvas & Surface Palette === */
-  --color-bg-primary: #FAF7F2;          /* Warm creamy fine-art paper */
-  --color-bg-secondary: #F3ECE2;        /* Natural parchment / linen */
-  --color-bg-tertiary: #E8DECF;         /* Warm stone */
-  --color-bg-elevated: #FFFFFF;         /* Crisp white card surface */
-  --color-bg-overlay: rgba(18, 15, 13, 0.82); /* Ambient cinematic overlay */
-  --color-bg-frosted: rgba(250, 247, 242, 0.88); /* Frosted glass navigation */
+  --color-bg-primary: #0D1B2A;          /* Deep Navy — primary dark canvas */
+  --color-bg-secondary: #1B263B;        /* Slate Navy — secondary surface */
+  --color-bg-tertiary: #243447;         /* Lifted slate — tertiary */
+  --color-bg-elevated: #1B263B;         /* Slate Navy card surface */
+  --color-bg-overlay: rgba(13, 27, 42, 0.92); /* Ambient cinematic overlay */
+  --color-bg-frosted: rgba(13, 27, 42, 0.92); /* Frosted glass navigation */
 
   /* === Ink & Typography === */
-  --color-text-primary: #171412;        /* Rich carbon ink */
-  --color-text-secondary: #585049;      /* Muted graphite */
-  --color-text-tertiary: #8C8278;       /* Subtle warm grey */
-  --color-text-inverse: #FAF7F2;        /* Crisp canvas text on dark */
+  --color-text-primary: #F5F7FA;        /* Soft White — primary text */
+  --color-text-secondary: #B8C4D4;      /* Cool silver-blue muted */
+  --color-text-tertiary: #7B8DA6;       /* Slate grey */
+  --color-text-inverse: #0D1B2A;        /* Deep Navy — text on light */
 
   /* === Artistic & Techno Accent Pops === */
-  --color-accent-primary: #E24E2B;      /* TechnoVIT Terracotta Crimson */
-  --color-accent-primary-hover: #C53C1B;
-  --color-accent-primary-light: rgba(226, 78, 43, 0.12);
+  --color-accent-primary: #D4AF37;      /* Festival Gold — primary accent */
+  --color-accent-primary-hover: #C19B28;
+  --color-accent-primary-light: rgba(212, 175, 55, 0.15);
 
-  --color-accent-electric: #2B59FF;     /* Cyber Cobalt Blue */
-  --color-accent-electric-light: rgba(43, 89, 255, 0.12);
+  --color-accent-electric: #5A8FD4;     /* Cool Steel Blue */
+  --color-accent-electric-light: rgba(90, 143, 212, 0.15);
 
-  --color-accent-gold: #F59E0B;         /* Radiant Festival Gold */
+  --color-accent-gold: #D4AF37;         /* Festival Gold */
   --color-accent-lime: #84CC16;         /* Electric Neon Chartreuse */
-  --color-accent-violet: #7C3AED;       /* Creative Indigo Violet */
+  --color-accent-violet: #9B7AD8;       /* Soft Lavender Violet */
 
   /* === Semantic Status Colors === */
-  --color-success: #15803D;             /* Forest green */
-  --color-warning: #B45309;             /* Warm amber */
-  --color-error: #DC2626;               /* Crimson red */
+  --color-success: #2ECC71;             /* Bright green on dark */
+  --color-warning: #E9A825;             /* Warm gold-amber */
+  --color-error: #E74C3C;               /* Signal red on dark */
 
   /* === Borders & Separators === */
-  --color-border: #E8DECF;              /* Soft parchment border */
-  --color-border-subtle: #F0E8DD;
-  --color-border-strong: #D4C5B2;
-  --color-grid-line: rgba(23, 20, 18, 0.04); /* Faint technical grid */
+  --color-border: #2A3A52;              /* Subtle navy border */
+  --color-border-subtle: #1F2F42;
+  --color-border-strong: #3A4F6A;
+  --color-grid-line: rgba(212, 175, 55, 0.04); /* Faint gold-tinted grid */
 
   /* === Typography Specs === */
   --font-display: var(--font-playfair), "Georgia", serif;
@@ -180,11 +180,11 @@ ol {
   --radius-full: 9999px;
 
   /* === Shadows (Tactile & Photographic) === */
-  --shadow-subtle: 0 2px 8px rgba(23, 20, 18, 0.04);
-  --shadow-photo: 0 8px 24px -4px rgba(23, 20, 18, 0.12), 0 2px 6px -1px rgba(23, 20, 18, 0.06);
-  --shadow-photo-hover: 0 20px 40px -8px rgba(23, 20, 18, 0.22), 0 4px 12px -2px rgba(23, 20, 18, 0.08);
-  --shadow-card: 0 4px 16px -2px rgba(23, 20, 18, 0.06);
-  --shadow-elevated: 0 24px 48px -12px rgba(23, 20, 18, 0.25);
+  --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-photo: 0 8px 24px -4px rgba(0, 0, 0, 0.35), 0 2px 6px -1px rgba(0, 0, 0, 0.2);
+  --shadow-photo-hover: 0 20px 40px -8px rgba(0, 0, 0, 0.5), 0 4px 12px -2px rgba(0, 0, 0, 0.25);
+  --shadow-card: 0 4px 16px -2px rgba(0, 0, 0, 0.25);
+  --shadow-elevated: 0 24px 48px -12px rgba(0, 0, 0, 0.55);
 
   /* === Transitions === */
   --duration-fast: 150ms;
@@ -222,7 +222,7 @@ ol {
   position: absolute;
   border-radius: 50%;
   filter: blur(80px);
-  mix-blend-mode: multiply;
+  mix-blend-mode: screen;
   opacity: 0.45;
   will-change: transform;
 }
@@ -232,7 +232,7 @@ ol {
   right: -50px;
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(226, 78, 43, 0.35) 0%, rgba(226, 78, 43, 0) 70%);
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.3) 0%, rgba(212, 175, 55, 0) 70%);
 }
 
 .paint-blob--cobalt {
@@ -240,7 +240,7 @@ ol {
   left: -150px;
   width: 550px;
   height: 550px;
-  background: radial-gradient(circle, rgba(43, 89, 255, 0.28) 0%, rgba(43, 89, 255, 0) 70%);
+  background: radial-gradient(circle, rgba(27, 38, 59, 0.45) 0%, rgba(27, 38, 59, 0) 70%);
 }
 
 .paint-blob--gold {
@@ -248,7 +248,7 @@ ol {
   right: 15%;
   width: 480px;
   height: 480px;
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.3) 0%, rgba(245, 158, 11, 0) 70%);
+  background: radial-gradient(circle, rgba(233, 215, 161, 0.25) 0%, rgba(233, 215, 161, 0) 70%);
 }
 
 /* -------------------------------------------------------

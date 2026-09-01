@@ -19,9 +19,9 @@
 .heroFloatingCardLeft,
 .heroFloatingCardRight {
   position: absolute;
-  background-color: #ffffff;
+  background-color: #E9D7A1;
   border-radius: var(--radius-sm);
-  border: 1px solid rgba(23, 20, 18, 0.08);
+  border: 1px solid rgba(212, 175, 55, 0.2);
   box-shadow: var(--shadow-photo);
   pointer-events: none;
   display: block;
@@ -119,8 +119,8 @@
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: rgba(23, 20, 18, 0.3);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  background: rgba(13, 27, 42, 0.3);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 @media (min-width: 1024px) {
@@ -133,7 +133,7 @@
 .heroThumbCaption {
   font-family: var(--font-mono);
   font-size: 8px;
-  color: var(--color-text-tertiary);
+  color: #585049;
   margin-top: 4px;
   display: block;
   text-align: left;
@@ -165,7 +165,7 @@
   color: var(--color-accent-primary);
   position: relative;
   display: inline-block;
-  background: linear-gradient(135deg, var(--color-accent-primary) 0%, #F59E0B 100%);
+  background: linear-gradient(135deg, var(--color-accent-primary) 0%, #E9D7A1 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -177,7 +177,7 @@
   left: 0;
   width: 100%;
   height: 6px;
-  background: rgba(226, 78, 43, 0.2);
+  background: rgba(212, 175, 55, 0.2);
   border-radius: var(--radius-full);
   z-index: -1;
 }
@@ -206,8 +206,8 @@
 }
 
 .dropBtn {
-  background: linear-gradient(135deg, var(--color-accent-primary) 0%, #C53C1B 100%);
-  color: #ffffff;
+  background: linear-gradient(135deg, var(--color-accent-primary) 0%, #C19B28 100%);
+  color: #0D1B2A;
   padding: 0 var(--space-8);
   height: 48px;
   min-height: 48px;
@@ -219,7 +219,7 @@
   text-transform: uppercase;
   border-radius: var(--radius-full);
   border: 1px solid transparent;
-  box-shadow: 0 6px 20px rgba(226, 78, 43, 0.35);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -229,7 +229,7 @@
 
 .dropBtn:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 10px 28px rgba(226, 78, 43, 0.45);
+  box-shadow: 0 10px 28px rgba(212, 175, 55, 0.45);
 }
 
 .dropBtn:active {
@@ -237,9 +237,9 @@
 }
 
 .mapBtn {
-  background-color: var(--color-bg-elevated);
-  color: var(--color-text-primary);
-  border: 1px solid var(--color-border);
+  background-color: transparent;
+  color: #F5F7FA;
+  border: 1px solid #E9D7A1;
   padding: 0 var(--space-8);
   height: 48px;
   min-height: 48px;

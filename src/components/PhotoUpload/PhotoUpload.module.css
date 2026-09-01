@@ -27,7 +27,7 @@
   width: 180px;
   height: 180px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(226, 78, 43, 0.14) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.14) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -198,7 +198,7 @@
   height: 120px;
   border-radius: var(--radius-sm);
   padding: 5px;
-  background-color: #ffffff;
+  background-color: #E9D7A1;
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-photo);
   transform: rotate(-2deg);
