@@ -56,6 +56,24 @@ select {
   color: inherit;
 }
 
+input,
+textarea,
+select {
+  color: var(--color-text-primary);
+  color-scheme: dark;
+}
+
+select option {
+  background-color: #1B263B;
+  color: #F5F7FA;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-text-tertiary);
+  opacity: 1;
+}
+
 p,
 h1,
 h2,

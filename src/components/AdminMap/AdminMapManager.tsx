@@ -143,10 +143,10 @@ export function AdminMapManager({ initialLocations }: AdminMapManagerProps) {
             backgroundColor:
               statusToast.type === "success" ? "rgba(46, 204, 113, 0.15)" : "rgba(231, 76, 60, 0.15)",
             border: `1px solid ${
-              statusToast.type === "success" ? "var(--color-status-approved)" : "var(--color-status-rejected)"
+              statusToast.type === "success" ? "var(--color-success)" : "var(--color-error)"
             }`,
             color:
-              statusToast.type === "success" ? "var(--color-status-approved)" : "var(--color-status-rejected)",
+              statusToast.type === "success" ? "var(--color-success)" : "var(--color-error)",
           }}
         >
           <span>

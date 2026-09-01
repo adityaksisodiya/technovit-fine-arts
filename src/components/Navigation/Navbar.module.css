@@ -111,12 +111,16 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  background-color: #FFFFFF;
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 .vitLogoImg {
-  height: 28px;
+  height: 24px;
   width: auto;
-  max-width: 130px;
+  max-width: 110px;
   object-fit: contain;
   display: block;
 }
@@ -126,9 +130,14 @@
     gap: var(--space-2);
   }
 
+  .vitBrandWrapper {
+    padding: 3px 6px;
+    border-radius: 4px;
+  }
+
   .vitLogoImg {
-    height: 22px;
-    max-width: 95px;
+    height: 18px;
+    max-width: 85px;
   }
 
   .clubTitle {
@@ -141,9 +150,14 @@
 }
 
 @media (max-width: 360px) {
+  .vitBrandWrapper {
+    padding: 2px 5px;
+    border-radius: 4px;
+  }
+
   .vitLogoImg {
-    height: 19px;
-    max-width: 80px;
+    height: 15px;
+    max-width: 70px;
   }
 
   .facLogoWrapper {
