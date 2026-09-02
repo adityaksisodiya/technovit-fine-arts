@@ -26,15 +26,25 @@ export function EditorialHero() {
         <span className={styles.heroThumbCaption}>#FineArtsClub</span>
       </div>
 
-      {/* Primary Editorial Headline */}
+      {/* Prominent Event Identifier Eyebrow */}
+      <div className={styles.eventEyebrow}>
+        <span className={styles.eyebrowSparkle} aria-hidden="true">✦</span>
+        <span className={styles.eyebrowText}>TechnoVIT 2026</span>
+        <span className={styles.eyebrowSparkle} aria-hidden="true">✦</span>
+      </div>
+
+      {/* Primary Editorial Headline with Subordinate Attribution */}
       <h1 className={styles.headline}>
-        See it. Live it. <br />
-        <span className={styles.accentWord}>Share the moment.</span>
+        <span className={styles.mainTitle}>A Canvas of TechnoVIT</span>
+        <span className={styles.attributionLine}>
+          <span className={styles.attributionDash} aria-hidden="true">—</span>{" "}
+          <span className={styles.attributionText}>By Fine Arts Club</span>
+        </span>
       </h1>
 
       {/* Subtitle */}
       <p className={styles.subtitle}>
-        Thousands of moments. One living festival wall.
+        Share your TechnoVIT story. Don’t forget to tag Fine Arts Club!
       </p>
 
       {/* Action CTAs */}

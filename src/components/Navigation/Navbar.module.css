@@ -45,7 +45,7 @@
 }
 
 .facBrandLink:hover {
-  opacity: 0.9;
+  opacity: 0.85;
   transform: translateY(-1px);
 }
 
@@ -54,15 +54,9 @@
   outline-offset: 3px;
 }
 
-.clubLogo {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
 .facLogoWrapper {
-  width: 32px;
-  height: 32px;
+  width: 38px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -76,51 +70,26 @@
   display: block;
 }
 
-.logoTextContainer {
-  display: flex;
-  flex-direction: column;
-}
-
-.clubTitle {
-  font-family: var(--font-techno);
-  font-size: 13px;
-  font-weight: var(--weight-extrabold);
-  letter-spacing: var(--tracking-wider);
-  color: var(--color-text-primary);
-  line-height: 1.1;
-  text-transform: uppercase;
-}
-
-.clubSubtitle {
-  font-size: 9.5px;
-  font-family: var(--font-mono);
-  color: var(--color-text-tertiary);
-  letter-spacing: var(--tracking-widest);
-  text-transform: uppercase;
-}
-
 .divider {
   width: 1px;
-  height: 22px;
+  height: 24px;
   background-color: var(--color-border);
   flex-shrink: 0;
 }
 
-.vitBrandWrapper {
+.vitLogoWrapper {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  background-color: #FFFFFF;
-  border-radius: var(--radius-sm);
-  padding: 4px 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  background: transparent;
+  padding: 0;
 }
 
 .vitLogoImg {
-  height: 24px;
+  height: 28px;
   width: auto;
-  max-width: 110px;
+  max-width: 100px;
   object-fit: contain;
   display: block;
 }
@@ -130,47 +99,42 @@
     gap: var(--space-2);
   }
 
-  .vitBrandWrapper {
-    padding: 3px 6px;
-    border-radius: 4px;
+  .facLogoWrapper {
+    width: 32px;
+    height: 34px;
   }
 
   .vitLogoImg {
-    height: 18px;
-    max-width: 85px;
+    height: 22px;
+    max-width: 78px;
   }
 
-  .clubTitle {
-    font-size: 11.5px;
-  }
-
-  .clubSubtitle {
-    font-size: 8.5px;
+  .divider {
+    height: 20px;
   }
 }
 
 @media (max-width: 360px) {
-  .vitBrandWrapper {
-    padding: 2px 5px;
-    border-radius: 4px;
-  }
-
-  .vitLogoImg {
-    height: 15px;
-    max-width: 70px;
+  .brandGroup {
+    gap: 6px;
   }
 
   .facLogoWrapper {
     width: 28px;
-    height: 28px;
+    height: 30px;
+  }
+
+  .vitLogoImg {
+    height: 19px;
+    max-width: 68px;
   }
 
   .divider {
-    height: 18px;
+    height: 16px;
   }
 }
 
-/* Nav Links */
+/* Desktop Nav Links */
 .navLinks {
   display: none;
   align-items: center;
@@ -184,7 +148,7 @@
 }
 
 .navLink {
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-2) var(--space-3);
   font-size: var(--text-xs);
   font-family: var(--font-techno);
   font-weight: var(--weight-semibold);
@@ -193,15 +157,29 @@
   color: var(--color-text-secondary);
   border-radius: var(--radius-full);
   min-height: 40px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 6px;
+  text-decoration: none;
   transition: all var(--duration-fast) var(--ease-out);
+  white-space: nowrap;
+}
+
+@media (min-width: 1024px) {
+  .navLink {
+    padding: var(--space-2) var(--space-4);
+  }
 }
 
 .navLink:hover {
   color: var(--color-text-primary);
   background-color: var(--color-bg-secondary);
+}
+
+.navLink:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
 }
 
 .navLinkActive {
@@ -210,11 +188,27 @@
   font-weight: var(--weight-bold);
 }
 
+.navLinkWithIcon {
+  display: inline-flex;
+  align-items: center;
+}
+
+.navIcon {
+  flex-shrink: 0;
+  stroke: currentColor;
+}
+
 .navLinkSpecial {
   background-color: var(--color-text-primary);
   color: var(--color-text-inverse);
-  padding: var(--space-2) var(--space-5);
+  padding: var(--space-2) var(--space-4);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+@media (min-width: 1024px) {
+  .navLinkSpecial {
+    padding: var(--space-2) var(--space-5);
+  }
 }
 
 .navLinkSpecial:hover {
@@ -223,7 +217,7 @@
   transform: translateY(-1px);
 }
 
-/* Mobile Toggle */
+/* Mobile Toggle Button */
 .mobileToggle {
   display: flex;
   align-items: center;
@@ -237,6 +231,16 @@
   color: var(--color-text-primary);
   font-size: 18px;
   -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.mobileToggle:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+.mobileToggle:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
 }
 
 @media (min-width: 768px) {
@@ -270,11 +274,22 @@
   justify-content: space-between;
   align-items: center;
   min-height: 48px;
+  text-decoration: none;
   -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-spring);
+}
+
+.mobileLink:hover {
+  background-color: var(--color-bg-tertiary);
 }
 
 .mobileLink:active {
   transform: scale(0.98);
+}
+
+.mobileLink:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
 }
 
 @keyframes slideDown {

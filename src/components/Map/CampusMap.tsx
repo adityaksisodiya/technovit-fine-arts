@@ -224,7 +224,7 @@ export function CampusMap({ initialLocations = [] }: CampusMapProps) {
         <span className="technical-tag">Campus Spaces • VIT Chennai</span>
         <h1 className={styles.mapTitle}>Explore the Campus</h1>
         <p className={styles.mapSubtitle}>
-          Discover festival locations and photo memories across VIT Chennai.
+          Discover locations and photo memories across VIT Chennai.
         </p>
       </header>
 

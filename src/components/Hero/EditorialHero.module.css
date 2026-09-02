@@ -4,12 +4,12 @@
 
 .hero {
   position: relative;
-  padding: clamp(var(--space-10), 8vw, var(--space-20)) 0 var(--space-10);
+  padding: clamp(var(--space-8), 6vw, var(--space-16)) 0 var(--space-8);
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: var(--space-5);
+  gap: var(--space-4);
   max-width: var(--width-container);
   margin-inline: auto;
   width: 100%;
@@ -33,27 +33,27 @@
 .heroFloatingCardLeft {
   top: 2%;
   left: 2%;
-  width: clamp(76px, 20vw, 95px);
+  width: clamp(70px, 18vw, 90px);
   padding: 4px 4px 10px;
-  opacity: 0.68;
+  opacity: 0.65;
   transform: rotate(-8deg) translateY(0);
   animation: floatTeaserLeftMobile 12s ease-in-out infinite alternate;
 }
 
 .heroFloatingCardRight {
-  top: 6%;
+  top: 4%;
   right: 2%;
-  width: clamp(76px, 20vw, 95px);
+  width: clamp(70px, 18vw, 90px);
   padding: 4px 4px 10px;
-  opacity: 0.68;
+  opacity: 0.65;
   transform: rotate(7deg) translateY(0);
   animation: floatTeaserRightMobile 14s ease-in-out infinite alternate;
 }
 
-/* Desktop: full size in the generous outer margins */
+/* Desktop: full size in outer margins */
 @media (min-width: 1024px) {
   .heroFloatingCardLeft {
-    top: 18%;
+    top: 14%;
     left: 2%;
     width: 130px;
     padding: 6px 6px 14px;
@@ -63,7 +63,7 @@
   }
 
   .heroFloatingCardRight {
-    top: 18%;
+    top: 14%;
     right: 2%;
     width: 130px;
     padding: 6px 6px 14px;
@@ -147,49 +147,112 @@
   }
 }
 
-/* Big Impact Headline */
-.headline {
-  font-family: var(--font-display);
-  font-size: clamp(2.25rem, 7.5vw, var(--text-7xl));
-  font-weight: var(--weight-bold);
-  line-height: 1.05;
-  letter-spacing: var(--tracking-tighter);
-  color: var(--color-text-primary);
-  max-width: 17ch;
+/* Event Identifier Badge / Eyebrow */
+.eventEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 20px;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.14) 0%, rgba(27, 38, 59, 0.85) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.18), inset 0 1px 0 rgba(233, 215, 161, 0.25);
   position: relative;
   z-index: 2;
+  margin-bottom: 4px;
 }
 
-.accentWord {
-  font-style: italic;
+.eyebrowText {
+  font-family: var(--font-techno);
+  font-size: clamp(0.8125rem, 1.4vw, 0.9375rem);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #F0E2B6;
+}
+
+.eyebrowSparkle {
+  font-size: 10px;
   color: var(--color-accent-primary);
+  opacity: 0.9;
+  line-height: 1;
+}
+
+/* Primary Editorial Headline Container */
+.headline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  max-width: min(960px, 100%);
   position: relative;
-  display: inline-block;
+  z-index: 2;
+  padding-inline: var(--space-2);
+  text-align: center;
+}
+
+/* Dominant Main Title */
+.mainTitle {
+  font-family: var(--font-display);
+  font-size: clamp(2.15rem, 6.2vw, 4.25rem);
+  font-weight: var(--weight-bold);
+  line-height: 1.08;
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-text-primary);
+  display: block;
+}
+
+/* Subordinate Supporting Attribution */
+.attributionLine {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 3.2vw, 2rem);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: var(--tracking-normal);
+  line-height: 1.25;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.attributionDash {
+  color: rgba(212, 175, 55, 0.65);
+  font-style: normal;
+  font-weight: 300;
+}
+
+.attributionText {
+  color: var(--color-accent-primary);
   background: linear-gradient(135deg, var(--color-accent-primary) 0%, #E9D7A1 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+  position: relative;
 }
 
-.accentWord::after {
+.attributionText::after {
   content: "";
   position: absolute;
-  bottom: 6%;
+  bottom: 2%;
   left: 0;
   width: 100%;
-  height: 6px;
-  background: rgba(212, 175, 55, 0.2);
+  height: 3px;
+  background: rgba(212, 175, 55, 0.25);
   border-radius: var(--radius-full);
   z-index: -1;
 }
 
 .subtitle {
   font-family: var(--font-body);
-  font-size: clamp(var(--text-sm), 3vw, var(--text-lg));
+  font-size: clamp(var(--text-sm), 2vw, var(--text-base));
   color: var(--color-text-secondary);
-  max-width: 50ch;
+  max-width: 52ch;
   line-height: 1.55;
   position: relative;
   z-index: 2;
+  padding-inline: var(--space-3);
 }
 
 /* Action CTAs */
@@ -199,7 +262,7 @@
   justify-content: center;
   flex-wrap: wrap;
   gap: var(--space-4);
-  padding-top: var(--space-3);
+  padding-top: var(--space-2);
   position: relative;
   z-index: 2;
   margin-inline: auto;
@@ -224,6 +287,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
+  text-decoration: none;
   transition: all var(--duration-fast) var(--ease-out);
 }
 
@@ -255,6 +319,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
+  text-decoration: none;
   transition: all var(--duration-fast) var(--ease-out);
 }
 
@@ -270,8 +335,18 @@
 
 @media (max-width: 520px) {
   .hero {
-    padding: var(--space-6) 0 var(--space-8);
-    gap: var(--space-4);
+    padding: var(--space-5) 0 var(--space-6);
+    gap: var(--space-3);
+  }
+
+  .eventEyebrow {
+    padding: 5px 14px;
+    gap: 6px;
+  }
+
+  .eyebrowText {
+    font-size: 0.8125rem;
+    letter-spacing: 0.14em;
   }
 
   .actionRow {
@@ -279,7 +354,7 @@
     width: 100%;
     max-width: 320px;
     gap: var(--space-3);
-    padding-top: var(--space-2);
+    padding-top: var(--space-1);
   }
 
   .dropBtn,

@@ -34,18 +34,18 @@ export interface AssetConfig {
 export const ASSETS: AssetConfig = {
   logos: {
     fineArtsClub: {
-      src: "/assets/logos/fine-arts-club.png",
-      alt: "Fine Arts Club — VIT Chennai",
+      src: "/assets/logos/fine-arts-club-logo.png",
+      alt: "Fine Arts Club, VIT Chennai",
       fallbackText: "FINE ARTS CLUB",
-      width: 512,
-      height: 512,
+      width: 624,
+      height: 652,
     },
     vitChennai: {
-      src: "/assets/logos/vit-chennai.png",
-      alt: "VIT Chennai Official Logo",
+      src: "/assets/logos/vit-chennai-white.png",
+      alt: "VIT Chennai",
       fallbackText: "VIT CHENNAI",
-      width: 1024,
-      height: 292,
+      width: 813,
+      height: 265,
     },
   },
   map: {
